@@ -5,7 +5,7 @@ Learning how to use [libopencm3: Open source ARM Cortex-M microcontroller librar
 ## Environment
 - Board: NUCLEO-F103RB (STM32F103RB)
 - IDE: PlatformIO IDE for Visual Studio Code
-  - Platform: ST STM32 `Ver. 15.0.0`
+  - Platform: [ST STM32](https://platformio.org/platforms/ststm32) `Ver. 15.0.0`
 
 ## Reference
 
