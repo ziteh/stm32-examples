@@ -1,2 +1,6 @@
-# learning-stm32-with-openlibcm3
-Learning STM32 with OpenLibCM3
+# Learning STM32 with LibOpenCM3
+
+Learning how to use [libopencm3: Open source ARM Cortex-M microcontroller library](https://github.com/libopencm3/libopencm3).
+
+- Board: NUCLEO-F103RB (STM32F103RB)
+- IDE: PlatformIO IDE for Visual Studio Code
