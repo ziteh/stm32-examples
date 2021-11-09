@@ -3,10 +3,9 @@
     {
       "path": "."
     },
-    {
-      "name": "blink",
-      "path": "blink"
-    }
   ],
-  "settings": {}
+  "settings": {},
+  "recommendations": [
+    "platformio.platformio-ide"
+  ]
 }
