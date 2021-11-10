@@ -7,6 +7,7 @@
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/usart.h>
+#include <libopencm3/cm3/nvic.h>
 
 #define USART (USART2)
 #define RCC_USART (RCC_USART2)
@@ -36,6 +37,9 @@ void rcc_setup(void)
  */
 void usart_setup(void)
 {
+  /* Enable USART IRQ. */
+  nvic_enable_irq(NVIC_USART2_IRQ);
+
   /* Setup Tx pin. */
   gpio_set_mode(USART_TX_PORT,
                 GPIO_MODE_OUTPUT_50_MHZ,
@@ -56,6 +60,9 @@ void usart_setup(void)
   usart_set_flow_control(USART, USART_FLOWCONTROL_NONE);
   usart_set_mode(USART, USART_MODE_TX_RX);
 
+  /* Enable Rx interrupt. */
+  usart_enable_rx_interrupt(USART);
+
   /* Enable. */
   usart_enable(USART);
 }
@@ -69,6 +76,20 @@ void led_setup(void)
                 GPIO_MODE_OUTPUT_2_MHZ,
                 GPIO_CNF_OUTPUT_PUSHPULL,
                 LED_PIN);
+}
+
+/**
+ * @brief USART2 Interrupt service routine.
+ */
+void usart2_isr(void)
+{
+  /* 
+   * Clear RXNE(Read data register not empty) flag of
+   * USART SR(Status register).
+   */
+  USART_SR(USART) &= ~USART_SR_RXNE;
+
+  gpio_toggle(LED_PORT, LED_PIN);
 }
 
 void delay(int value)
@@ -97,7 +118,7 @@ int main(void)
     usart_send_blocking(USART, '\n');
 
     /* Let User-LED blinking */
-    gpio_toggle(LED_PORT, LED_PIN);
+    // gpio_toggle(LED_PORT, LED_PIN);
 
     delay(800000);
   }
