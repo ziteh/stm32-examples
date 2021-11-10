@@ -1,7 +1,7 @@
 /**
  * @file   main.c
  * @author ZiTe (honmonoh@gmail.com)
- * @brief  --
+ * @brief  Basic USART with receive interrupt.
  */
 
 #include <libopencm3/stm32/rcc.h>

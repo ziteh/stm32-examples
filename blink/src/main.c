@@ -1,12 +1,13 @@
 /**
  * @file   main.c
  * @author ZiTe (honmonoh@gmail.com)
+ * @brief  Basic LED blinking example.
  */
 
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
 
-// The User-LED on NUCLEO-F103RB board is PA5(Port-A, Pin-5).
+// The User-LED is PA5(Port-A, Pin-5).
 #define RCC_LED_PORT (RCC_GPIOA)
 #define LED_PORT (GPIOA)
 #define LED_PIN (GPIO5)

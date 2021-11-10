@@ -1,7 +1,7 @@
 /**
  * @file   main.c
  * @author ZiTe (honmonoh@gmail.com)
- * @brief  For NUCLEO-F103RB(STM32F104RB)
+ * @brief  Basic button external interrupt(EXTI).
  */
 
 #include <libopencm3/stm32/rcc.h>
