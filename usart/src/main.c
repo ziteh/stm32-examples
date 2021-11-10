@@ -83,13 +83,27 @@ void led_setup(void)
  */
 void usart2_isr(void)
 {
+  /* Send message 'Received'. */
+  usart_send_blocking(USART, 'R');
+  usart_send_blocking(USART, 'e');
+  usart_send_blocking(USART, 'c');
+  usart_send_blocking(USART, 'e');
+  usart_send_blocking(USART, 'i');
+  usart_send_blocking(USART, 'v');
+  usart_send_blocking(USART, 'e');
+  usart_send_blocking(USART, 'd');
+
+  /* Newline(CRLF). */
+  usart_send_blocking(USART, '\r');
+  usart_send_blocking(USART, '\n');
+
+  gpio_toggle(LED_PORT, LED_PIN);
+
   /* 
    * Clear RXNE(Read data register not empty) flag of
    * USART SR(Status register).
    */
   USART_SR(USART) &= ~USART_SR_RXNE;
-
-  gpio_toggle(LED_PORT, LED_PIN);
 }
 
 void delay(int value)
@@ -113,12 +127,11 @@ int main(void)
     usart_send_blocking(USART, 'i');
     usart_send_blocking(USART, '!');
 
-    /* Newline(\r\n). */
+    /* Newline(CRLF). */
     usart_send_blocking(USART, '\r');
     usart_send_blocking(USART, '\n');
 
-    /* Let User-LED blinking */
-    // gpio_toggle(LED_PORT, LED_PIN);
+    gpio_toggle(LED_PORT, LED_PIN);
 
     delay(800000);
   }
