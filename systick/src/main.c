@@ -2,6 +2,7 @@
  * @file   main.c
  * @author ZiTe (honmonoh@gmail.com)
  * @brief  Basic SysTick(System tick timer) example.
+ * @remark Reference: https://github.com/libopencm3/libopencm3-examples/blob/master/examples/stm32/f1/other/systick/systick.c
  */
 
 #include <libopencm3/stm32/rcc.h>
