@@ -6,14 +6,12 @@
  */
 
 #include <stdio.h>
-#include <errno.h>
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/usart.h>
+#include "printf.h"
 
 #define USART_BAUD_RATE (9600)
-
-int _write(int file, char *ptr, int len);
 
 void gpio_setup(void)
 {
@@ -53,23 +51,6 @@ void delay(int value)
   {
     __asm__("nop");
   }
-}
-
-int _write(int file, char *ptr, int len)
-{
-  int i;
-
-  if (file == 1)
-  {
-    for (i = 0; i < len; i++)
-    {
-      usart_send_blocking(USART2, ptr[i]);
-    }
-    return i;
-  }
-
-  errno = EIO;
-  return -1;
 }
 
 int main(void)
