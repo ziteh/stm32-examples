@@ -5,14 +5,14 @@
  * @remark Reference: https://docs.platformio.org/en/latest/tutorials/ststm32/stm32cube_debugging_unit_testing.html#writing-unit-tests
  */
 
+#include "unittest_transport.h"
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/usart.h>
 #include <libopencm3/stm32/gpio.h>
-#include "unittest_transport.h"
 
 #define USART_BAUD_RATE (115200)
 
-void unittest_usart_begin(void)
+void unittest_uart_begin(void)
 {
   /* Clock. */
   rcc_periph_clock_enable(GPIOA);
@@ -40,14 +40,14 @@ void unittest_usart_begin(void)
   usart_enable(USART2);
 }
 
-void unittest_usart_putchar(char c)
+void unittest_uart_putchar(char c)
 {
   usart_send_blocking(USART2, (uint16_t)c);
 }
 
-void unittest_usart_flush(void) {}
+void unittest_uart_flush(void) {}
 
-void unittest_usart_end(void)
+void unittest_uart_end(void)
 {
   usart_disable(USART2);
 

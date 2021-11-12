@@ -13,10 +13,10 @@ extern "C"
 {
 #endif
 
-  void unittest_usart_begin(void);
-  void unittest_usart_putchar(char c);
-  void unittest_usart_flush(void) {}
-  void unittest_usart_end(void);
+  void unittest_uart_begin(void);
+  void unittest_uart_putchar(char c);
+  void unittest_uart_flush(void);
+  void unittest_uart_end(void);
 
 #ifdef __cplusplus
 }
