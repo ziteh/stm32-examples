@@ -9,9 +9,22 @@
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/timer.h>
 
-#define PWM_DUTY_CYCLE (72.5) /* PWM duty cycle in %. */
-#define PWM_TIMER_PERIOD (48000)
-#define PWM_TIMER_PRESCALER ((rcc_apb1_frequency / PWM_TIMER_PERIOD) / (1000))
+#define PWM_FREQUENCY (1000)  /* PWM frequency in Hz. */
+#define PWM_DUTY_CYCLE (72.5) /* PWM duty-cycle in %. */
+
+/*
+ * f_pwm: PWM frequency.
+ * f_sys: System frequency. The value is 48MHz(48000000) in this caes.
+ * PRS:   PWM timer prescaler.
+ * PER:   PWM timer period.
+ * 
+ * f_pwm = f_sys / [(PRS + 1) * (PER + 1)]
+ * 
+ * so,
+ * PER = {f_sys / [(PRS + 1) * f_pwm]} - 1
+ */
+#define PWM_TIMER_PRESCALER (48 - 1)
+#define PWM_TIMER_PERIOD ((48000000 / ((PWM_TIMER_PRESCALER + 1) * PWM_FREQUENCY)) - 1)
 
 void gpio_setup(void)
 {
@@ -41,7 +54,9 @@ void pwm_setup(void)
   timer_set_period(TIM3, PWM_TIMER_PERIOD);
 
   timer_set_oc_mode(TIM3, TIM_OC2, TIM_OCM_PWM1);
-  timer_set_oc_value(TIM3, TIM_OC2, PWM_TIMER_PERIOD * (PWM_DUTY_CYCLE / 100.0));
+  timer_set_oc_value(TIM3,
+                     TIM_OC2,
+                     PWM_TIMER_PERIOD * (PWM_DUTY_CYCLE / 100.0));
 
   timer_enable_oc_output(TIM3, TIM_OC2);
   timer_enable_counter(TIM3);
