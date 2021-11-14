@@ -7,12 +7,12 @@
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
 
-/* The User-LED was on PA5 (Port-A, Pin-5) in my case (NUCLEO-F103RB). */
+/* The User-LED was on PA5 (Port-A, Pin-5) in my case (NUCLEO-F103RB board). */
 #define RCC_LED_PORT (RCC_GPIOA)
 #define LED_PORT     (GPIOA)
 #define LED_PIN      (GPIO5)
 
-void delay(int value)
+void delay(unsigned int value)
 {
   while(value--)
   {
@@ -35,7 +35,7 @@ int main(void)
   while (1)
   {
     gpio_toggle(LED_PORT, LED_PIN); /* LED on/off. */
-    delay(1000000);                 /* Wait a bit. */
+    delay(500000);                  /* Wait a bit. */
   }
 
   return 0;
