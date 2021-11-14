@@ -13,18 +13,33 @@
 #define PWM_DUTY_CYCLE (72.5) /* PWM duty-cycle in %. */
 
 /*
+ * f_pwm = f_tim / [(PRS + 1) * (PER + 1)]
+ * 
+ * So,
+ * PER = {f_tim / [(PRS + 1) * f_pwm]} - 1
+ * 
  * f_pwm: PWM frequency.
- * f_sys: System frequency. The value is 48MHz(48000000) in this caes.
+ * f_tim: Timer frequency. The value is 'rcc_apb1_frequency * 2' equal 48MHz in this case.
  * PRS:   PWM timer prescaler.
  * PER:   PWM timer period.
  * 
- * f_pwm = f_sys / [(PRS + 1) * (PER + 1)]
+ * We can get the value of f_tim by 'Clock Tree'.
  * 
- * so,
- * PER = {f_sys / [(PRS + 1) * f_pwm]} - 1
+ * In my case, I'm using STM32F103RB (NUCLEO-F103RB board),
+ * look at datasheet-production data of STM32F103x8/B (DocID 13587, Rev 17),
+ * the 'Clock Tree' show on 'Figure 2' at page-12.
+ * 
+ * I'm using Timer3 (TIM3) for PWM, the TIM3 clock is from APB1,
+ * and setup system clock = 48MHz by 'rcc_clock_setup_in_hsi_out_48mhz()' function,
+ * it will also set the APB1 prescaler = 2, so APB1 clock is 48MHz / 2 = 24MHz.
+ * 
+ * But if APB1 prescaler not equal 1, the TIM3 clock given by APB1 will multiply 2.
+ * So, the TIM3 clock = APB1 clock * 2
+ *                    = 24MHz * 2
+ *                    = 48MHz
  */
 #define PWM_TIMER_PRESCALER (48 - 1)
-#define PWM_TIMER_PERIOD ((48000000 / ((PWM_TIMER_PRESCALER + 1) * PWM_FREQUENCY)) - 1)
+#define PWM_TIMER_PERIOD (((rcc_apb1_frequency * 2) / ((PWM_TIMER_PRESCALER + 1) * PWM_FREQUENCY)) - 1)
 
 void gpio_setup(void)
 {
@@ -64,6 +79,7 @@ void pwm_setup(void)
 
 int main(void)
 {
+  /* Setup system clock = 48MHz. */
   rcc_clock_setup_in_hsi_out_48mhz();
 
   gpio_setup();
