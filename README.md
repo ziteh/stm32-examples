@@ -7,7 +7,7 @@ Learning how to use [libopencm3: Open source ARM Cortex-M microcontroller librar
 - IDE: PlatformIO IDE for Visual Studio Code
   - Platform: [ST STM32](https://platformio.org/platforms/ststm32) `Ver. 15.0.0`
 
-> You can setup different board or plarform in PlatformIO.
+> You can setup different board or platform in PlatformIO.
 
 ## Reference
 
