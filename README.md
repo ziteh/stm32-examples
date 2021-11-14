@@ -2,9 +2,7 @@
 
 Learning how to use [libopencm3: Open source ARM Cortex-M microcontroller library](https://github.com/libopencm3/libopencm3).
 
-## Usage
-
-See the most basic 'Blink' example at [blink/src/main.c](blink/src/main.c)
+See the most basic 'Blinking LED' example at [blink/src/main.c](blink/src/main.c)
 
 ## Environment
 - Board: NUCLEO-F103RB (STM32F103RB)
