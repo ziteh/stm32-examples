@@ -3,6 +3,10 @@
     {
       "path": "."
     },
+    {
+      "name": "multi_adc",
+      "path": "multi_adc"
+    }
   ],
   "settings": {},
   "recommendations": [
