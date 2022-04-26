@@ -10,8 +10,11 @@
 #include <libopencm3/cm3/nvic.h>
 
 /* Timer */
-#define TIMER_PRESCALER (rcc_apb1_frequency / 1000)
-#define TIMER_PERIOD (500)
+#define TIMER_FREQUENCY (5) /* Goal frequency in Hz. */
+
+#define TIMER_CLOCK (rcc_apb1_frequency * 2)
+#define TIMER_PRESCALER (480 - 1)
+#define TIMER_PERIOD ((TIMER_CLOCK / ((TIMER_PRESCALER + 1) * TIMER_FREQUENCY)) - 1)
 
 /* User-LED */
 #define RCC_LED_PORT (RCC_GPIOA)
@@ -48,6 +51,23 @@ void timer_setup(void)
   timer_enable_irq(TIM2, TIM_DIER_CC1IE);
 }
 
+int main(void)
+{
+  /* Setup system clock = 48MHz. */
+  rcc_clock_setup_in_hsi_out_48mhz();
+
+  led_setup();
+  timer_setup();
+
+  /* Halt. */
+  while (1)
+  {
+    __asm__("nop");
+  }
+
+  return 0;
+}
+
 /**
  * @brief Timer2 Interrupt service routine.
  */
@@ -64,18 +84,4 @@ void tim2_isr(void)
 
     gpio_toggle(LED_PORT, LED_PIN);
   }
-}
-
-int main(void)
-{
-  led_setup();
-  timer_setup();
-
-  /* Halt. */
-  while (1)
-  {
-    __asm__("nop");
-  }
-
-  return 0;
 }
