@@ -43,7 +43,7 @@
 
 void gpio_setup(void)
 {
-  /* Timer3-Channel2 on PA7 (NUCLEO-F103RB). */
+  /* Timer3-Channel2 on PA7(D11) for NUCLEO-F103RB. */
   rcc_periph_clock_enable(RCC_GPIOA);
   gpio_set_mode(GPIOA,
                 GPIO_MODE_OUTPUT_50_MHZ,
