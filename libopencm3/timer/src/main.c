@@ -10,8 +10,18 @@
 
 #define TIMER_FREQUENCY (5) /* Goal frequency in Hz. */
 
+/* If apb_presc = /1 than timer_clock = apb_clock, else timer_clock = 2* apb_clock. */
+#define TIMER_CLOCK (rcc_apb1_frequency * 2)
+#define TIMER_PRESCALER (TIMER_CLOCK / 100000 - 1)
+
+/*
+ * f_goal = f_timer / [(Prescaler + 1) * (Period + 1)]
+ * so
+ * Period = {f_timer / [(Prescaler + 1) * f_goal]} - 1
+ */
+#define TIMER_PERIOD ((TIMER_CLOCK / ((TIMER_PRESCALER + 1) * TIMER_FREQUENCY)) - 1)
+
 #ifdef NUCLEO_F103RB
-#define TIMER_PRESCALER (480 - 1)
 #define NVIC_TIM_IRQ (NVIC_TIM2_IRQ)
 #define RCC_TIM (RCC_TIM2)
 
@@ -20,7 +30,6 @@
 #define GPIO_LED_PIN (GPIO5)
 
 #elif NUCLEO_F446RE
-#define TIMER_PRESCALER (1680 - 1)
 #define NVIC_TIM_IRQ (NVIC_TIM2_IRQ)
 #define RCC_TIM (RCC_TIM2)
 
@@ -30,10 +39,6 @@
 #else
 #error
 #endif
-
-/* If apb_presc = /1 than timer_clock = apb_clock, else timer_clock = 2* apb_clock. */
-#define TIMER_CLOCK (rcc_apb1_frequency * 2)
-#define TIMER_PERIOD ((TIMER_CLOCK / ((TIMER_PRESCALER + 1) * TIMER_FREQUENCY)) - 1)
 
 void rcc_setup(void);
 void timer_setup(void);
@@ -58,7 +63,7 @@ void rcc_setup(void)
 {
   /* Setup system clock. */
 #ifdef NUCLEO_F103RB
-  rcc_clock_setup_in_hsi_out_48mhz();
+  rcc_clock_setup_in_hse_8mhz_out_72mhz();
 #elif NUCLEO_F446RE
   rcc_clock_setup_pll(&rcc_hse_8mhz_3v3[RCC_CLOCK_3V3_168MHZ]);
 #endif

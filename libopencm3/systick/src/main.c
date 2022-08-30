@@ -10,15 +10,15 @@
 #include <libopencm3/cm3/nvic.h>
 
 #ifdef NUCLEO_F103RB
-  #define RCC_LED_PORT (RCC_GPIOA)
-  #define GPIO_LED_PORT (GPIOA)
-  #define GPIO_LED_PIN (GPIO5)
+#define RCC_LED_PORT (RCC_GPIOA)
+#define GPIO_LED_PORT (GPIOA)
+#define GPIO_LED_PIN (GPIO5)
 #elif NUCLEO_F446RE
-  #define RCC_LED_PORT (RCC_GPIOA)
-  #define GPIO_LED_PORT (GPIOA)
-  #define GPIO_LED_PIN (GPIO5)
+#define RCC_LED_PORT (RCC_GPIOA)
+#define GPIO_LED_PORT (GPIOA)
+#define GPIO_LED_PIN (GPIO5)
 #else
-  #error
+#error
 #endif
 
 volatile uint32_t systick_count = 0;
@@ -55,7 +55,7 @@ void delay_ms(uint32_t ms)
 void rcc_setup(void)
 {
 #ifdef NUCLEO_F103RB
-  rcc_clock_setup_in_hsi_out_48mhz();
+  rcc_clock_setup_in_hse_8mhz_out_72mhz();
 #elif NUCLEO_F446RE
   rcc_clock_setup_pll(&rcc_hse_8mhz_3v3[RCC_CLOCK_3V3_168MHZ]);
 #endif
