@@ -31,6 +31,7 @@
 #error
 #endif
 
+/* If apb_presc = /1 than timer_clock = apb_clock, else timer_clock = 2* apb_clock. */
 #define TIMER_CLOCK (rcc_apb1_frequency * 2)
 #define TIMER_PERIOD ((TIMER_CLOCK / ((TIMER_PRESCALER + 1) * TIMER_FREQUENCY)) - 1)
 
