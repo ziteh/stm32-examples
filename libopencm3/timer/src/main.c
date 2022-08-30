@@ -8,7 +8,7 @@
 #include <libopencm3/stm32/timer.h>
 #include <libopencm3/cm3/nvic.h>
 
-#define TIMER_FREQUENCY (5) /* Goal frequency in Hz. */
+#define GOAL_FREQUENCY (5) /* Goal frequency in Hz. */
 
 /* If apb_presc = /1 than timer_clock = apb_clock, else timer_clock = 2* apb_clock. */
 #define TIMER_CLOCK (rcc_apb1_frequency * 2)
@@ -19,7 +19,7 @@
  * so
  * Period = {f_timer / [(Prescaler + 1) * f_goal]} - 1
  */
-#define TIMER_PERIOD ((TIMER_CLOCK / ((TIMER_PRESCALER + 1) * TIMER_FREQUENCY)) - 1)
+#define TIMER_PERIOD ((TIMER_CLOCK / ((TIMER_PRESCALER + 1) * GOAL_FREQUENCY)) - 1)
 
 #ifdef NUCLEO_F103RB
 #define NVIC_TIM_IRQ (NVIC_TIM2_IRQ)
