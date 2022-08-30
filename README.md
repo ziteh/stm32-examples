@@ -1,4 +1,4 @@
-# LibOpenCM3 STM32 Examples
+# STM32 Examples
 
 Learning how to use [libopencm3: Open source ARM Cortex-M microcontroller library](https://github.com/libopencm3/libopencm3).
 
