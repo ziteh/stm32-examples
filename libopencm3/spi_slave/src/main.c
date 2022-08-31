@@ -1,7 +1,7 @@
 /**
  * @file   main.c
  * @author ZiTe (honmonoh@gmail.com)
- * @brief  SPI master mode example for STM32 Nucleo-F103RB and F446RE.
+ * @brief  SPI slave mode example for STM32 Nucleo-F103RB and F446RE.
  */
 
 #include <libopencm3/stm32/rcc.h>
@@ -24,12 +24,12 @@
 #define GPIO_SPI_MOSI_PIN (GPIO7)
 #define GPIO_SPI_CS_PORT (GPIOB)
 #define GPIO_SPI_CS_PIN (GPIO6)
+#define NVIC_SPI_CS_IRQ (NVIC_EXTI9_5_IRQ)
+#define EXTI_SPI_CS (EXTI6)
 
 #define RCC_SPI_RQ_GPIO (RCC_GPIOC)
 #define GPIO_SPI_RQ_PORT (GPIOC)
 #define GPIO_SPI_RQ_PIN (GPIO7)
-#define NVIC_SPI_RQ_IRQ (NVIC_EXTI9_5_IRQ)
-#define EXTI_SPI_RQ (EXTI7)
 
 #define RCC_USART (RCC_USART2)
 #define RCC_USART_TXRX_GPIO (RCC_GPIOA)
@@ -47,12 +47,12 @@
 #define GPIO_SPI_MOSI_PIN (GPIO7)
 #define GPIO_SPI_CS_PORT (GPIOB)
 #define GPIO_SPI_CS_PIN (GPIO6)
+#define NVIC_SPI_CS_IRQ (NVIC_EXTI9_5_IRQ)
+#define EXTI_SPI_CS (EXTI6)
 
 #define RCC_SPI_RQ_GPIO (RCC_GPIOC)
 #define GPIO_SPI_RQ_PORT (GPIOC)
 #define GPIO_SPI_RQ_PIN (GPIO7)
-#define NVIC_SPI_RQ_IRQ (NVIC_EXTI9_5_IRQ)
-#define EXTI_SPI_RQ (EXTI7)
 
 #define RCC_USART (RCC_USART2)
 #define RCC_USART_TXRX_GPIO (RCC_GPIOA)
@@ -67,8 +67,8 @@ void rcc_setup(void);
 void spi_setup(void);
 void usart_setup(void);
 void spi_rq_setup(void);
-void spi_select(void);
-void spi_deselect(void);
+void spi_rq_set(void);
+void spi_rq_reset(void);
 
 int main(void)
 {
@@ -77,12 +77,7 @@ int main(void)
   spi_setup();
   spi_rq_setup();
 
-  usart_send_blocking(USART2, 'M');
-  usart_send_blocking(USART2, 'a');
   usart_send_blocking(USART2, 's');
-  usart_send_blocking(USART2, 't');
-  usart_send_blocking(USART2, 'e');
-  usart_send_blocking(USART2, 'r');
   usart_send_blocking(USART2, '\r');
   usart_send_blocking(USART2, '\n');
 
@@ -95,14 +90,14 @@ int main(void)
   return 0;
 }
 
-void spi_select(void)
+void spi_rq_set(void)
 {
-  gpio_clear(GPIO_SPI_CS_PORT, GPIO_SPI_CS_PIN);
+  gpio_clear(GPIO_SPI_RQ_PORT, GPIO_SPI_RQ_PIN);
 }
 
-void spi_deselect(void)
+void spi_rq_reset(void)
 {
-  gpio_set(GPIO_SPI_CS_PORT, GPIO_SPI_CS_PIN);
+  gpio_set(GPIO_SPI_RQ_PORT, GPIO_SPI_RQ_PIN);
 }
 
 void rcc_setup(void)
@@ -140,11 +135,12 @@ void spi_setup(void)
                 GPIO_CNF_OUTPUT_ALTFN_PUSHPULL,
                 GPIO_SPI_MOSI_PIN);
 
-  /* Control CS by manual instead of AF. */
+  /* CS control by msater device, config as EXTI. */
   gpio_set_mode(GPIO_SPI_CS_PORT,
-                GPIO_MODE_OUTPUT_10_MHZ,
-                GPIO_CNF_OUTPUT_OPENDRAIN,
+                GPIO_MODE_INPUT,
+                GPIO_CNF_INPUT_PULL_UPDOWN,
                 GPIO_SPI_CS_PIN);
+  GPIO_ODR(GPIO_SPI_CS_PORT) |= GPIO_SPI_CS_PIN; /* Set to Pull-Up */
 #elif NUCLEO_F446RE
   gpio_mode_setup(GPIO_SPI_SCK_PORT, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO_SPI_SCK_PIN);
   gpio_mode_setup(GPIO_SPI_MISO_PORT, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO_SPI_MISO_PIN);
@@ -158,50 +154,51 @@ void spi_setup(void)
   gpio_set_af(GPIO_SPI_MISO_PORT, GPIO_AF5, GPIO_SPI_MISO_PIN);
   gpio_set_af(GPIO_SPI_MOSI_PORT, GPIO_AF5, GPIO_SPI_MOSI_PIN);
 
-  /* Control CS by manual instead of AF. */
-  gpio_mode_setup(GPIO_SPI_CS_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO_SPI_CS_PIN);
-  gpio_set_output_options(GPIO_SPI_CS_PORT, GPIO_OTYPE_OD, GPIO_OSPEED_25MHZ, GPIO_SPI_CS_PIN);
+  /* CS control by msater device, config as EXTI. */
+  gpio_mode_setup(GPIO_SPI_CS_PORT, GPIO_MODE_INPUT, GPIO_PUPD_PULLUP, GPIO_SPI_CS_PIN);
 #endif
+
+  nvic_enable_irq(NVIC_SPI_CS_IRQ);
+  exti_select_source(EXTI_SPI_CS, GPIO_SPI_CS_PORT);
+  exti_set_trigger(EXTI_SPI_CS, EXTI_TRIGGER_BOTH);
+  exti_enable_request(EXTI_SPI_CS);
 
   spi_reset(SPI1);
 
-  /* Set up in master mode. */
+  /* SPI init. */
   spi_init_master(SPI1,
                   SPI_CR1_BAUDRATE_FPCLK_DIV_64,   /* Clock baudrate. */
                   SPI_CR1_CPOL_CLK_TO_0_WHEN_IDLE, /* Set clock to low when idle. */
                   SPI_CR1_CPHA_CLK_TRANSITION_2,   /* Data is sampled on the 2nd edge. */
                   SPI_CR1_DFF_8BIT,                /* Data frame format. */
                   SPI_CR1_MSBFIRST);               /* Data frame bit order. */
-  spi_set_full_duplex_mode(SPI1);
 
-  /* Control CS by manual instead of AF. */
-  spi_disable_software_slave_management(SPI1);
-  spi_deselect();
+  spi_set_slave_mode(SPI1); /* Set to slave mode. */
+  spi_set_full_duplex_mode(SPI1);
 
   spi_enable(SPI1);
 }
 
 void spi_rq_setup(void)
 {
-  /* Set to input floating. */
+  /* Set to output open-drain. */
 #ifdef NUCLEO_F103RB
   gpio_set_mode(GPIO_SPI_RQ_PORT,
-                GPIO_MODE_INPUT,
-                GPIO_CNF_INPUT_PULL_UPDOWN,
+                GPIO_MODE_OUTPUT_10_MHZ,
+                GPIO_CNF_OUTPUT_OPENDRAIN,
                 GPIO_SPI_RQ_PIN);
-  GPIO_ODR(GPIO_SPI_RQ_PORT) |= GPIO_SPI_RQ_PIN; /* Set to Pull-Up */
 #else
   gpio_mode_setup(GPIO_SPI_RQ_PORT,
-                  GPIO_MODE_INPUT,
-                  GPIO_PUPD_PULLUP,
+                  GPIO_MODE_OUTPUT,
+                  GPIO_PUPD_NONE,
                   GPIO_SPI_RQ_PIN);
-#endif
 
-  /* Set up interrupt. */
-  nvic_enable_irq(NVIC_SPI_RQ_IRQ);
-  exti_select_source(EXTI_SPI_RQ, GPIO_SPI_RQ_PORT);
-  exti_set_trigger(EXTI_SPI_RQ, EXTI_TRIGGER_FALLING);
-  exti_enable_request(EXTI_SPI_RQ);
+  gpio_set_output_options(GPIO_SPI_RQ_PORT,
+                          GPIO_OTYPE_OD,
+                          GPIO_OSPEED_25MHZ,
+                          GPIO_SPI_RQ_PIN);
+#endif
+  spi_rq_reset();
 }
 
 void usart_setup(void)
@@ -252,24 +249,8 @@ void usart2_isr(void)
 {
   uint8_t indata = usart_recv(USART2); /* Read received data. */
 
-  spi_select();
-  spi_send(SPI1, indata);
-
-  /*
-   * Wait for SPI transmit complete.
-   * TXE: Transmit register empty.
-   * BSY: Busy.
-   *
-   * Ref: https://controllerstech.com/spi-using-registers-in-stm32/.
-   */
-  while (!(SPI_SR(SPI1) & (SPI_SR_TXE))) /* Wait for TXE flag to set. */
-  {
-  }
-  while ((SPI_SR(SPI1) & (SPI_SR_BSY))) /* Wait for BSY flag to reset. */
-  {
-  }
-
-  spi_deselect();
+  spi_rq_set();           /* Request master to select this device. */
+  spi_send(SPI1, indata); /* Put data into buffer. */
 
   /* Clear RXNE(Read data register not empty) flag at SR(Status register). */
   USART_SR(USART2) &= ~USART_SR_RXNE;
@@ -280,12 +261,18 @@ void usart2_isr(void)
  */
 void exti9_5_isr(void)
 {
-  exti_reset_request(EXTI_SPI_RQ);
+  exti_reset_request(EXTI_SPI_CS);
 
-  spi_select();
-  spi_send(SPI1, 0x00); /* Just for beget clock signal. */
-  uint8_t indata = spi_read(SPI1);
-  spi_deselect();
+  bool spi_selected = gpio_get(GPIO_SPI_CS_PORT, GPIO_SPI_CS_PIN) == 0;
 
-  usart_send_blocking(USART2, indata);
+  if (spi_selected)
+  {
+    while ((SPI_SR(SPI1) & (SPI_SR_BSY))) /* Wait for BSY flag to reset. */
+    {
+    }
+
+    uint8_t indata = spi_read(SPI1);
+    spi_rq_reset();
+    usart_send_blocking(USART2, indata);
+  }
 }
