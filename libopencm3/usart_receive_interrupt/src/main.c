@@ -85,7 +85,7 @@ void usart_setup(void)
                   GPIO_USART_TX_PIN | GPIO_USART_RX_PIN);
 
   gpio_set_af(GPIO_USART_TXRX_PORT,
-              GPIO_AF7,
+              GPIO_AF7, /* Ref: Table-11 in DS10693. */
               GPIO_USART_TX_PIN | GPIO_USART_RX_PIN);
 #endif
 
