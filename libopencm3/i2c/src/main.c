@@ -58,8 +58,8 @@ void i2c_setup(void)
                 GPIO_I2C_SCL_PIN | GPIO_I2C_SDA_PIN);
 
   /*
-   * Note!
-   * Alternate function remap is required for I2C1_SCL & SDA.
+   * Alternate function remap is required for
+   * using I2C1_SCL & SDA on PB8 & PB9.
    * Ref: Table-5 in DS5319.
    */
   gpio_primary_remap(AFIO_MAPR_SWJ_CFG_FULL_SWJ,
