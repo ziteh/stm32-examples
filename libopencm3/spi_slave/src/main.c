@@ -1,7 +1,7 @@
 /**
  * @file   main.c
+ * @brief  SPI slave mode example for STM32 Nucleo boards.
  * @author ZiTe (honmonoh@gmail.com)
- * @brief  SPI slave mode example for STM32 Nucleo-F103RB and F446RE.
  */
 
 #include <libopencm3/stm32/rcc.h>
@@ -13,148 +13,103 @@
 
 #define USART_BAUDRATE (9600)
 
-#ifdef NUCLEO_F103RB
-#define RCC_SPI (RCC_SPI1)
-#define RCC_SPI_GPIO (RCC_GPIOA | RCC_GPIOB)
-#define GPIO_SPI_SCK_PORT (GPIOA)
-#define GPIO_SPI_SCK_PIN (GPIO5)
-#define GPIO_SPI_MISO_PORT (GPIOA)
-#define GPIO_SPI_MISO_PIN (GPIO6)
-#define GPIO_SPI_MOSI_PORT (GPIOA)
-#define GPIO_SPI_MOSI_PIN (GPIO7)
-#define GPIO_SPI_CS_PORT (GPIOB)
-#define GPIO_SPI_CS_PIN (GPIO6)
-#define NVIC_SPI_CS_IRQ (NVIC_EXTI9_5_IRQ)
-#define EXTI_SPI_CS (EXTI6)
+#if defined(NUCLEO_F103RB)
+  #define GPIO_SPI_SCK_MISO_MOSI_PORT (GPIOA)
+  #define GPIO_SPI_SCK_PIN (GPIO5)  /* D13. */
+  #define GPIO_SPI_MISO_PIN (GPIO6) /* D12. */
+  #define GPIO_SPI_MOSI_PIN (GPIO7) /* D11. */
+  #define GPIO_SPI_CS_PORT (GPIOB)
+  #define GPIO_SPI_CS_PIN (GPIO6) /* D10. */
+  #define EXTI_SPI_CS (EXTI5)
+  #define NVIC_SPI_CS_IRQ (NVIC_EXTI9_5_IRQ)
 
-#define RCC_SPI_RQ_GPIO (RCC_GPIOC)
-#define GPIO_SPI_RQ_PORT (GPIOC)
-#define GPIO_SPI_RQ_PIN (GPIO7)
+  #define GPIO_SPI_RQ_PORT (GPIOC)
+  #define GPIO_SPI_RQ_PIN (GPIO7) /* D9. */
 
-#define RCC_USART (RCC_USART2)
-#define RCC_USART_TXRX_GPIO (RCC_GPIOA)
-#define GPIO_USART_TXRX_PORT (GPIOA)
-#define GPIO_USART_TX_PIN (GPIO2)
-#define GPIO_USART_RX_PIN (GPIO3)
-#elif NUCLEO_F446RE
-#define RCC_SPI (RCC_SPI1)
-#define RCC_SPI_GPIO (RCC_GPIOA | RCC_GPIOB)
-#define GPIO_SPI_SCK_PORT (GPIOA)
-#define GPIO_SPI_SCK_PIN (GPIO5)
-#define GPIO_SPI_MISO_PORT (GPIOA)
-#define GPIO_SPI_MISO_PIN (GPIO6)
-#define GPIO_SPI_MOSI_PORT (GPIOA)
-#define GPIO_SPI_MOSI_PIN (GPIO7)
-#define GPIO_SPI_CS_PORT (GPIOB)
-#define GPIO_SPI_CS_PIN (GPIO6)
-#define NVIC_SPI_CS_IRQ (NVIC_EXTI9_5_IRQ)
-#define EXTI_SPI_CS (EXTI6)
+  #define RCC_USART_TXRX_GPIO (RCC_GPIOA)
+  #define GPIO_USART_TXRX_PORT (GPIOA)
+  #define GPIO_USART_TX_PIN (GPIO2) /* D1. */
+  #define GPIO_USART_RX_PIN (GPIO3) /* D0. */
+#elif defined(NUCLEO_F446RE)
+  #define GPIO_SPI_SCK_MISO_MOSI_PORT (GPIOA)
+  #define GPIO_SPI_SCK_PIN (GPIO5)  /* D13. */
+  #define GPIO_SPI_MISO_PIN (GPIO6) /* D12. */
+  #define GPIO_SPI_MOSI_PIN (GPIO7) /* D11. */
+  #define GPIO_SPI_CS_PORT (GPIOB)
+  #define GPIO_SPI_CS_PIN (GPIO6) /* D10. */
+  #define EXTI_SPI_CS (EXTI5)
+  #define NVIC_SPI_CS_IRQ (NVIC_EXTI9_5_IRQ)
+  #define GPIO_SPI_AF (GPIO_AF5) /* Ref: Table-11 in DS10693. */
 
-#define RCC_SPI_RQ_GPIO (RCC_GPIOC)
-#define GPIO_SPI_RQ_PORT (GPIOC)
-#define GPIO_SPI_RQ_PIN (GPIO7)
+  #define GPIO_SPI_RQ_PORT (GPIOC)
+  #define GPIO_SPI_RQ_PIN (GPIO7) /* D9. */
 
-#define RCC_USART (RCC_USART2)
-#define RCC_USART_TXRX_GPIO (RCC_GPIOA)
-#define GPIO_USART_TXRX_PORT (GPIOA)
-#define GPIO_USART_TX_PIN (GPIO2)
-#define GPIO_USART_RX_PIN (GPIO3)
+  #define GPIO_USART_TXRX_PORT (GPIOA)
+  #define GPIO_USART_TX_PIN (GPIO2) /* D1. */
+  #define GPIO_USART_RX_PIN (GPIO3) /* D0. */
+  #define GPIO_USART_AF (GPIO_AF7)  /* Ref: Table-11 in DS10693. */
 #else
-#error
+  #error "STM32 Nucleo board not defined."
 #endif
 
-void rcc_setup(void);
-void spi_setup(void);
-void usart_setup(void);
-void spi_rq_setup(void);
-void spi_rq_set(void);
-void spi_rq_reset(void);
-
-int main(void)
-{
-  rcc_setup();
-  usart_setup();
-  spi_setup();
-  spi_rq_setup();
-
-  usart_send_blocking(USART2, 's');
-  usart_send_blocking(USART2, '\r');
-  usart_send_blocking(USART2, '\n');
-
-  /* Halt. */
-  while (1)
-  {
-    __asm__("nop"); /* Do nothing. */
-  }
-
-  return 0;
-}
-
-void spi_rq_set(void)
+static void spi_rq_set(void)
 {
   gpio_clear(GPIO_SPI_RQ_PORT, GPIO_SPI_RQ_PIN);
 }
 
-void spi_rq_reset(void)
+static void spi_rq_reset(void)
 {
   gpio_set(GPIO_SPI_RQ_PORT, GPIO_SPI_RQ_PIN);
 }
 
-void rcc_setup(void)
+static void rcc_setup(void)
 {
-#ifdef NUCLEO_F103RB
+#if defined(NUCLEO_F103RB)
   rcc_clock_setup_in_hse_8mhz_out_72mhz();
   rcc_periph_clock_enable(RCC_AFIO); /* For EXTI. */
-#elif NUCLEO_F446RE
+#elif defined(NUCLEO_F446RE)
   rcc_clock_setup_pll(&rcc_hse_8mhz_3v3[RCC_CLOCK_3V3_168MHZ]);
   rcc_periph_clock_enable(RCC_SYSCFG); /* For EXTI. */
 #endif
-
-  rcc_periph_clock_enable(RCC_USART_TXRX_GPIO);
-  rcc_periph_clock_enable(RCC_USART);
-  rcc_periph_clock_enable(RCC_SPI_GPIO);
-  rcc_periph_clock_enable(RCC_SPI);
-  rcc_periph_clock_enable(RCC_SPI_RQ_GPIO);
+  rcc_periph_clock_enable(RCC_GPIOA);
+  rcc_periph_clock_enable(RCC_GPIOB);
+  rcc_periph_clock_enable(RCC_GPIOC);
+  rcc_periph_clock_enable(RCC_USART2);
+  rcc_periph_clock_enable(RCC_SPI1);
 }
 
-void spi_setup(void)
+static void spi_setup(void)
 {
-#ifdef NUCLEO_F103RB
-  gpio_set_mode(GPIO_SPI_SCK_PORT,
+  /*
+   * Set SPI-SCK & MISO & MOSI pin to alternate function.
+   * Set SPI-CS pin to input pull-up.
+   */
+#if defined(STM32F1)
+  gpio_set_mode(GPIO_SPI_SCK_MISO_MOSI_PORT,
                 GPIO_MODE_OUTPUT_50_MHZ,
                 GPIO_CNF_OUTPUT_ALTFN_PUSHPULL,
-                GPIO_SPI_SCK_PIN);
+                GPIO_SPI_SCK_PIN | GPIO_SPI_MISO_PIN | GPIO_SPI_MOSI_PIN);
 
-  gpio_set_mode(GPIO_SPI_MISO_PORT,
-                GPIO_MODE_OUTPUT_50_MHZ,
-                GPIO_CNF_OUTPUT_ALTFN_PUSHPULL,
-                GPIO_SPI_MISO_PIN);
-
-  gpio_set_mode(GPIO_SPI_MOSI_PORT,
-                GPIO_MODE_OUTPUT_50_MHZ,
-                GPIO_CNF_OUTPUT_ALTFN_PUSHPULL,
-                GPIO_SPI_MOSI_PIN);
-
-  /* CS control by msater device, config as EXTI. */
   gpio_set_mode(GPIO_SPI_CS_PORT,
                 GPIO_MODE_INPUT,
                 GPIO_CNF_INPUT_PULL_UPDOWN,
                 GPIO_SPI_CS_PIN);
-  GPIO_ODR(GPIO_SPI_CS_PORT) |= GPIO_SPI_CS_PIN; /* Set to Pull-Up */
-#elif NUCLEO_F446RE
-  gpio_mode_setup(GPIO_SPI_SCK_PORT, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO_SPI_SCK_PIN);
-  gpio_mode_setup(GPIO_SPI_MISO_PORT, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO_SPI_MISO_PIN);
-  gpio_mode_setup(GPIO_SPI_MOSI_PORT, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO_SPI_MOSI_PIN);
+  GPIO_ODR(GPIO_SPI_CS_PORT) |= GPIO_SPI_CS_PIN; /* Set uo pull-up. */
+#else
+  gpio_mode_setup(GPIO_SPI_SCK_MISO_MOSI_PORT,
+                  GPIO_MODE_AF,
+                  GPIO_PUPD_NONE,
+                  GPIO_SPI_SCK_PIN | GPIO_SPI_MISO_PIN | GPIO_SPI_MOSI_PIN);
 
-  gpio_set_output_options(GPIO_SPI_SCK_PORT, GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ, GPIO_SPI_SCK_PIN);
-  gpio_set_output_options(GPIO_SPI_MOSI_PORT, GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ, GPIO_SPI_MOSI_PIN);
+  gpio_set_output_options(GPIO_SPI_SCK_MISO_MOSI_PORT,
+                          GPIO_OTYPE_PP,
+                          GPIO_OSPEED_50MHZ,
+                          GPIO_SPI_SCK_PIN | GPIO_SPI_MISO_PIN | GPIO_SPI_MOSI_PIN);
 
-  /* Ref: Table-11 in DS10693. */
-  gpio_set_af(GPIO_SPI_SCK_PORT, GPIO_AF5, GPIO_SPI_SCK_PIN);
-  gpio_set_af(GPIO_SPI_MISO_PORT, GPIO_AF5, GPIO_SPI_MISO_PIN);
-  gpio_set_af(GPIO_SPI_MOSI_PORT, GPIO_AF5, GPIO_SPI_MOSI_PIN);
+  gpio_set_af(GPIO_SPI_SCK_MISO_MOSI_PORT,
+              GPIO_SPI_AF,
+              GPIO_SPI_SCK_PIN | GPIO_SPI_MISO_PIN | GPIO_SPI_MOSI_PIN);
 
-  /* CS control by msater device, config as EXTI. */
   gpio_mode_setup(GPIO_SPI_CS_PORT, GPIO_MODE_INPUT, GPIO_PUPD_PULLUP, GPIO_SPI_CS_PIN);
 #endif
 
@@ -179,55 +134,47 @@ void spi_setup(void)
   spi_enable(SPI1);
 }
 
-void spi_rq_setup(void)
+static void spi_rq_setup(void)
 {
-  /* Set to output open-drain. */
-#ifdef NUCLEO_F103RB
+  /* Set RQ pin to output open-drain. */
+#if defined(STM32F1)
   gpio_set_mode(GPIO_SPI_RQ_PORT,
                 GPIO_MODE_OUTPUT_10_MHZ,
                 GPIO_CNF_OUTPUT_OPENDRAIN,
                 GPIO_SPI_RQ_PIN);
 #else
-  gpio_mode_setup(GPIO_SPI_RQ_PORT,
-                  GPIO_MODE_OUTPUT,
-                  GPIO_PUPD_NONE,
-                  GPIO_SPI_RQ_PIN);
-
-  gpio_set_output_options(GPIO_SPI_RQ_PORT,
-                          GPIO_OTYPE_OD,
-                          GPIO_OSPEED_25MHZ,
-                          GPIO_SPI_RQ_PIN);
+  gpio_mode_setup(GPIO_SPI_RQ_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO_SPI_RQ_PIN);
+  gpio_set_output_options(GPIO_SPI_RQ_PORT, GPIO_OTYPE_OD, GPIO_OSPEED_25MHZ, GPIO_SPI_RQ_PIN);
 #endif
+
   spi_rq_reset();
 }
 
-void usart_setup(void)
+static void usart_setup(void)
 {
-  /* Set to alternate function. */
-#ifdef NUCLEO_F103RB
-  /* Tx. */
+  /* Set USART-Tx & Rx pin to alternate function. */
+#if defined(STM32F1)
   gpio_set_mode(GPIO_USART_TXRX_PORT,
                 GPIO_MODE_OUTPUT_50_MHZ,
                 GPIO_CNF_OUTPUT_ALTFN_PUSHPULL,
                 GPIO_USART_TX_PIN);
 
-  /* Rx. */
   gpio_set_mode(GPIO_USART_TXRX_PORT,
                 GPIO_MODE_INPUT,
                 GPIO_CNF_INPUT_FLOAT,
                 GPIO_USART_RX_PIN);
-#elif NUCLEO_F446RE
+#else
   gpio_mode_setup(GPIO_USART_TXRX_PORT,
                   GPIO_MODE_AF,
                   GPIO_PUPD_NONE,
                   GPIO_USART_TX_PIN | GPIO_USART_RX_PIN);
 
   gpio_set_af(GPIO_USART_TXRX_PORT,
-              GPIO_AF7, /* Ref: Table-11 in DS10693. */
+              GPIO_USART_AF,
               GPIO_USART_TX_PIN | GPIO_USART_RX_PIN);
 #endif
 
-  /* Interrupt. */
+  /* Setup interrupt. */
   nvic_enable_irq(NVIC_USART2_IRQ);
   usart_enable_rx_interrupt(USART2); /* Enable receive interrupt. */
 
@@ -242,15 +189,34 @@ void usart_setup(void)
   usart_enable(USART2);
 }
 
+int main(void)
+{
+  rcc_setup();
+  usart_setup();
+  spi_setup();
+  spi_rq_setup();
+
+  usart_send_blocking(USART2, 's');
+  usart_send_blocking(USART2, '\r');
+  usart_send_blocking(USART2, '\n');
+
+  /* Halt. */
+  while (1)
+  {
+    __asm__("nop"); /* Do nothing. */
+  }
+
+  return 0;
+}
+
 /**
  * @brief USART2 Interrupt service routine.
  */
 void usart2_isr(void)
 {
   uint8_t indata = usart_recv(USART2); /* Read received data. */
-
-  spi_rq_set();           /* Request master to select this device. */
-  spi_send(SPI1, indata); /* Put data into buffer. */
+  spi_send(SPI1, indata);              /* Put data into buffer. */
+  spi_rq_set();                        /* Request master device to select this device. */
 
   /* Clear RXNE(Read data register not empty) flag at SR(Status register). */
   USART_SR(USART2) &= ~USART_SR_RXNE;
@@ -264,10 +230,9 @@ void exti9_5_isr(void)
   exti_reset_request(EXTI_SPI_CS);
 
   bool spi_selected = gpio_get(GPIO_SPI_CS_PORT, GPIO_SPI_CS_PIN) == 0;
-
   if (spi_selected)
   {
-    while ((SPI_SR(SPI1) & (SPI_SR_BSY))) /* Wait for BSY flag to reset. */
+    while ((SPI_SR(SPI1) & (SPI_SR_BSY))) /* Wait for BSY(Busy) flag to reset. */
     {
     }
 

@@ -1,7 +1,7 @@
 /**
  * @file   main.c
+ * @brief  Multi channel ADC example for STM32 Nucleo boards.
  * @author ZiTe (honmonoh@gmail.com)
- * @brief  Multi channel ADC example for Nucleo-F103RB and F446RE.
  */
 
 #include "main.h"
@@ -15,7 +15,7 @@ int main(void)
 
   uint8_t channel = 0;
 
-  printf("Ready\r\n");
+  printf("ADC Ready\r\n");
 
   while (1)
   {
@@ -45,7 +45,7 @@ int main(void)
   return 0;
 }
 
-uint16_t get_adc_value(int channel)
+static uint16_t get_adc_value(int channel)
 {
   /* Setup channel. */
   uint8_t adc_channel[16];
@@ -53,7 +53,7 @@ uint16_t get_adc_value(int channel)
   adc_set_regular_sequence(ADC1, 1, adc_channel);
 
   /* Software start conversion. */
-#ifdef NUCLEO_F103RB
+#if defined(STM32F1)
   adc_start_conversion_direct(ADC1);
 #else
   adc_start_conversion_regular(ADC1);
@@ -62,60 +62,49 @@ uint16_t get_adc_value(int channel)
   /* Wait for ADC end of conversion. */
   while (!adc_eoc(ADC1))
   {
-    __asm__("nop"); /* Do nothing. */
   }
 
   return adc_read_regular(ADC1); /* Read ADC value. */
 }
 
-void delay(uint32_t value)
+static void delay(uint32_t value)
 {
-  while (value--)
+  for (uint32_t i = 0; i < value; i++)
   {
     __asm__("nop"); /* Do nothing. */
   }
 }
 
-void rcc_setup(void)
+static void rcc_setup(void)
 {
-#ifdef NUCLEO_F103RB
+#if defined(STM32F1)
   rcc_clock_setup_in_hse_8mhz_out_72mhz();
-#elif NUCLEO_F446RE
+#elif defined(STM32F4)
   rcc_clock_setup_pll(&rcc_hse_8mhz_3v3[RCC_CLOCK_3V3_168MHZ]);
 #endif
 
-  rcc_periph_clock_enable(RCC_USART_TX_PORT);
-  rcc_periph_clock_enable(RCC_USART);
-  rcc_periph_clock_enable(RCC_ADC_PORT);
-  rcc_periph_clock_enable(RCC_ADC);
-  rcc_periph_clock_enable(RCC_LED_PORT);
+  rcc_periph_clock_enable(RCC_USART_TX_GPIO);
+  rcc_periph_clock_enable(RCC_USART2);
+  rcc_periph_clock_enable(RCC_ADC_GPIO);
+  rcc_periph_clock_enable(RCC_ADC1);
+  rcc_periph_clock_enable(RCC_LED_GPIO);
 }
 
-void led_setup(void)
+static void led_setup(void)
 {
-  /* Set to output Push-Pull. */
-#ifdef NUCLEO_F103RB
-  gpio_set_mode(GPIO_LED_PORT,
-                GPIO_MODE_OUTPUT_2_MHZ,
-                GPIO_CNF_OUTPUT_PUSHPULL,
-                GPIO_LED_PIN);
-#elif NUCLEO_F446RE
-  gpio_mode_setup(GPIO_LED_PORT,
-                  GPIO_MODE_OUTPUT,
-                  GPIO_PUPD_NONE,
-                  GPIO_LED_PIN);
-
-  gpio_set_output_options(GPIO_LED_PORT,
-                          GPIO_OTYPE_PP,
-                          GPIO_OSPEED_2MHZ,
-                          GPIO_LED_PIN);
+  /* Set LED pin to output push-pull. */
+#if defined(STM32F1)
+  gpio_set_mode(GPIO_LED_PORT, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO_LED_PIN);
+#else
+  gpio_mode_setup(GPIO_LED_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO_LED_PIN);
+  gpio_set_output_options(GPIO_LED_PORT, GPIO_OTYPE_PP, GPIO_OSPEED_2MHZ, GPIO_LED_PIN);
 #endif
 }
 
-void adc_setup(void)
+static void adc_setup(void)
 {
-/* Set to analog input. */
-#ifdef NUCLEO_F103RB
+/* Set to input analog. */
+#if defined(STM32F1)
   gpio_set_mode(GPIO_ADC_PORT,
                 GPIO_MODE_INPUT,
                 GPIO_CNF_INPUT_ANALOG,
@@ -140,26 +129,20 @@ void adc_setup(void)
   delay(800000); /* Wait a bit. */
 }
 
-void usart_setup(void)
+static void usart_setup(void)
 {
-  /* Set to output alternate function. */
-#ifdef NUCLEO_F103RB
-  gpio_set_mode(GPIOA,
+  /* Set USART-Tx pin to alternate function. */
+#if defined(NUCLEO_F103RB)
+  gpio_set_mode(GPIO_USART_TX_PORT,
                 GPIO_MODE_OUTPUT_50_MHZ,
                 GPIO_CNF_OUTPUT_ALTFN_PUSHPULL,
-                GPIO2);
+                GPIO_USART_TX_PIN);
 #else
-  gpio_mode_setup(GPIO_USART_TX_PORT,
-                  GPIO_MODE_AF,
-                  GPIO_PUPD_NONE,
-                  GPIO_USART_TX_PIN);
-
-  gpio_set_af(GPIO_USART_TX_PORT,
-              GPIO_AF7, /* Ref: Table-11 in DS10693. */
-              GPIO_USART_TX_PIN);
+  gpio_mode_setup(GPIO_USART_TX_PORT, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO_USART_TX_PIN);
+  gpio_set_af(GPIO_USART_TX_PORT, GPIO_USART_AF, GPIO_USART_TX_PIN);
 #endif
 
-  /* Setup USART config. */
+  /* Config USART params. */
   usart_set_baudrate(USART2, USART_BAUDRATE);
   usart_set_databits(USART2, 8);
   usart_set_stopbits(USART2, USART_STOPBITS_1);

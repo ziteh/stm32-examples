@@ -1,51 +1,52 @@
 /**
- *  @file  main.c
- *  @brief Button input example for STM32 Nucleo-F103RB and F446RE.
+ * @file   main.c
+ * @brief  Polling button example for STM32 Nucleo boards.
+ * @author ZiTe (honmonoh@gmail.com)
  */
 
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
 
-#ifdef NUCLEO_F103RB
-  #define RCC_BUTTON_PORT (RCC_GPIOC)
+#if defined(NUCLEO_F103RB)
+  #define RCC_BUTTON_GPIO (RCC_GPIOC)
   #define GPIO_BUTTON_PORT (GPIOC)
   #define GPIO_BUTTON_PIN (GPIO13)
 
-  #define RCC_LED_PORT (RCC_GPIOA)
+  #define RCC_LED_GPIO (RCC_GPIOA)
   #define GPIO_LED_PORT (GPIOA)
-  #define GPIO_LED_PIN (GPIO5)
-#elif NUCLEO_F446RE
-  #define RCC_BUTTON_PORT (RCC_GPIOC)
+  #define GPIO_LED_PIN (GPIO5) /* D13. */
+#elif defined(NUCLEO_F446RE)
+  #define RCC_BUTTON_GPIO (RCC_GPIOC)
   #define GPIO_BUTTON_PORT (GPIOC)
   #define GPIO_BUTTON_PIN (GPIO13)
 
-  #define RCC_LED_PORT (RCC_GPIOA)
+  #define RCC_LED_GPIO (RCC_GPIOA)
   #define GPIO_LED_PORT (GPIOA)
-  #define GPIO_LED_PIN (GPIO5)
+  #define GPIO_LED_PIN (GPIO5) /* D13. */
 #else
-  #error
+  #error "STM32 Nucleo board not defined."
 #endif
 
 int main(void)
 {
   /* Enable clock. */
-  rcc_periph_clock_enable(RCC_LED_PORT);
-  rcc_periph_clock_enable(RCC_BUTTON_PORT);
+  rcc_periph_clock_enable(RCC_LED_GPIO);
+  rcc_periph_clock_enable(RCC_BUTTON_GPIO);
 
-#ifdef NUCLEO_F103RB
-  /* Setup LED pin. */
+#if defined(STM32F1)
+  /* Set LED pin to output push-pull. */
   gpio_set_mode(GPIO_LED_PORT,
                 GPIO_MODE_OUTPUT_2_MHZ,
                 GPIO_CNF_OUTPUT_PUSHPULL,
                 GPIO_LED_PIN);
 
-  /* Setup button pin. */
+  /* Set button pin to input floating. */
   gpio_set_mode(GPIO_BUTTON_PORT,
                 GPIO_MODE_INPUT,
                 GPIO_CNF_INPUT_FLOAT,
                 GPIO_BUTTON_PIN);
 #else
-  /* Setup LED pin. */
+  /* Set LED pin to output push-pull. */
   gpio_mode_setup(GPIO_LED_PORT,
                   GPIO_MODE_OUTPUT,
                   GPIO_PUPD_NONE,
@@ -55,7 +56,7 @@ int main(void)
                           GPIO_OSPEED_2MHZ,
                           GPIO_LED_PIN);
 
-  /* Setup button pin. */
+  /* Set button pin to input floating. */
   gpio_mode_setup(GPIO_BUTTON_PORT,
                   GPIO_MODE_INPUT,
                   GPIO_PUPD_NONE,

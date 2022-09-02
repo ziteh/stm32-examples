@@ -1,6 +1,7 @@
 /**
  * @file   main.c
- * @brief  USART with printf() function for STM32 Nucleo-F103RB and F446RE.
+ * @brief  USART with printf() function for STM32 Nucleo boards.
+ * @author ZiTe (honmonoh@gmail.com)
  * @remark Reference: https://github.com/libopencm3/libopencm3-examples/blob/master/examples/stm32/f1/stm32-h103/usart_printf/usart_printf.c
  */
 
@@ -12,30 +13,37 @@
 
 #define USART_BAUDRATE (9600)
 
-#ifdef NUCLEO_F103RB
-  #define RCC_USART (RCC_USART2)
-  #define RCC_USART_TX_PORT (RCC_GPIOA)
-  #define GPIO_USART_TX_PORT (GPIOA)
-  #define GPIO_USART_TX_PIN (GPIO2)
-#elif NUCLEO_F446RE
-  #define RCC_USART (RCC_USART2)
-  #define RCC_USART_TX_PORT (RCC_GPIOA)
-  #define GPIO_USART_TX_PORT (GPIOA)
-  #define GPIO_USART_TX_PIN (GPIO2)
+#if defined(NUCLEO_F103RB)
+#define RCC_USART_TX_GPIO (RCC_GPIOA)
+#define GPIO_USART_TX_PORT (GPIOA)
+#define GPIO_USART_TX_PIN (GPIO2) /* D1. */
+#elif defined(NUCLEO_F446RE)
+#define RCC_USART_TX_GPIO (RCC_GPIOA)
+#define GPIO_USART_TX_PORT (GPIOA)
+#define GPIO_USART_TX_PIN (GPIO2) /* D1. */
+#define GPIO_USART_AF (GPIO_AF7)  /* Ref: Table-11 in DS10693. */
 #else
-  #error
+#error "STM32 Nucleo board not defined."
 #endif
 
-void rcc_setup(void)
+static void delay(uint32_t value)
 {
-  rcc_periph_clock_enable(RCC_USART_TX_PORT);
-  rcc_periph_clock_enable(RCC_USART);
+  for (uint32_t i = 0; i < value; i++)
+  {
+    __asm__("nop"); /* Do nothing. */
+  }
 }
 
-void usart_setup(void)
+static void rcc_setup(void)
 {
-  /* Set to output alternate function. */
-#ifdef NUCLEO_F103RB
+  rcc_periph_clock_enable(RCC_USART_TX_PORT);
+  rcc_periph_clock_enable(RCC_USART2);
+}
+
+static void usart_setup(void)
+{
+  /* Set USART-Tx pin to alternate function. */
+#if defined(STM32F1)
   gpio_set_mode(GPIOA,
                 GPIO_MODE_OUTPUT_50_MHZ,
                 GPIO_CNF_OUTPUT_ALTFN_PUSHPULL,
@@ -45,46 +53,20 @@ void usart_setup(void)
                   GPIO_MODE_AF,
                   GPIO_PUPD_NONE,
                   GPIO_USART_TX_PIN);
-
   gpio_set_af(GPIO_USART_TX_PORT,
-              GPIO_AF7,
+              GPIO_USART_AF,
               GPIO_USART_TX_PIN);
 #endif
 
-  /* Setup USART config. */
+  /* Congif USART params. */
   usart_set_baudrate(USART2, USART_BAUDRATE);
   usart_set_databits(USART2, 8);
   usart_set_stopbits(USART2, USART_STOPBITS_1);
   usart_set_parity(USART2, USART_PARITY_NONE);
   usart_set_flow_control(USART2, USART_FLOWCONTROL_NONE);
-  usart_set_mode(USART2, USART_MODE_TX);
+  usart_set_mode(USART2, USART_MODE_TX); /* Tx-Only mode. */
 
   usart_enable(USART2);
-}
-
-void delay(uint32_t value)
-{
-  while (value--)
-  {
-    __asm__("nop"); /* Do nothing. */
-  }
-}
-
-int _write(int file, char *ptr, int len)
-{
-  int i;
-
-  if (file == 1)
-  {
-    for (i = 0; i < len; i++)
-    {
-      usart_send_blocking(USART2, ptr[i]);
-    }
-    return i;
-  }
-
-  errno = EIO;
-  return -1;
 }
 
 int main(void)
@@ -100,4 +82,22 @@ int main(void)
   }
 
   return 0;
+}
+
+/* For printf(). */
+int _write(int file, char *ptr, int len)
+{
+  int i;
+
+  if (file == 1)
+  {
+    for (i = 0; i < len; i++)
+    {
+      usart_send_blocking(USART2, ptr[i]);
+    }
+    return i;
+  }
+
+  errno = EIO;
+  return -1;
 }

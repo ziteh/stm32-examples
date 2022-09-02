@@ -38,15 +38,15 @@ int _write(int file, char *ptr, int len)
   return -1;
 }
 
-void delay(int value)
+static void delay(int value)
 {
-  while (value--)
+  for (uint32_t i = 0; i < value; i++)
   {
     __asm__("nop");
   }
 }
 
-void gpio_setup(void)
+static void gpio_setup(void)
 {
   /* All the used GPIO are Port-A. */
   rcc_periph_clock_enable(RCC_GPIOA);
@@ -70,7 +70,7 @@ void gpio_setup(void)
                 GPIO5);
 }
 
-void adc_setup(void)
+static void adc_setup(void)
 {
   rcc_periph_clock_enable(RCC_ADC1);
 
@@ -88,7 +88,7 @@ void adc_setup(void)
   adc_calibrate(ADC1);
 }
 
-void usart_setup(void)
+static void usart_setup(void)
 {
   rcc_periph_clock_enable(RCC_USART2);
 

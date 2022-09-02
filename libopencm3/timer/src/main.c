@@ -1,6 +1,7 @@
 /**
  * @file   main.c
- * @brief  Timer example for STM32 Nucleo-F103RB and F446RE.
+ * @brief  Timer example for STM32 Nucleo boards.
+ * @author ZiTe (honmonoh@gmail.com)
  */
 
 #include <libopencm3/stm32/rcc.h>
@@ -21,28 +22,69 @@
  */
 #define TIMER_PERIOD ((TIMER_CLOCK / ((TIMER_PRESCALER + 1) * GOAL_FREQUENCY)) - 1)
 
-#ifdef NUCLEO_F103RB
-#define NVIC_TIM_IRQ (NVIC_TIM2_IRQ)
-#define RCC_TIM (RCC_TIM2)
-
-#define RCC_LED_PORT (RCC_GPIOA)
-#define GPIO_LED_PORT (GPIOA)
-#define GPIO_LED_PIN (GPIO5)
-
-#elif NUCLEO_F446RE
-#define NVIC_TIM_IRQ (NVIC_TIM2_IRQ)
-#define RCC_TIM (RCC_TIM2)
-
-#define RCC_LED_PORT (RCC_GPIOA)
-#define GPIO_LED_PORT (GPIOA)
-#define GPIO_LED_PIN (GPIO5)
+#if defined(NUCLEO_F103RB)
+  #define RCC_LED_GPIO (RCC_GPIOA)
+  #define GPIO_LED_PORT (GPIOA)
+  #define GPIO_LED_PIN (GPIO5) /* D13. */
+#elif defined(NUCLEO_F446RE)
+  #define RCC_LED_GPIO (RCC_GPIOA)
+  #define GPIO_LED_PORT (GPIOA)
+  #define GPIO_LED_PIN (GPIO5) /* D13. */
 #else
-#error
+  #error "STM32 Nucleo board not defined."
 #endif
 
-void rcc_setup(void);
-void timer_setup(void);
-void led_setup(void);
+static void rcc_setup(void)
+{
+  /* Setup system clock. */
+#if defined(STM32F1)
+  rcc_clock_setup_in_hse_8mhz_out_72mhz();
+#elif defined(STM32F4)
+  rcc_clock_setup_pll(&rcc_hse_8mhz_3v3[RCC_CLOCK_3V3_168MHZ]);
+#endif
+
+  rcc_periph_clock_enable(RCC_LED_GPIO);
+  rcc_periph_clock_enable(RCC_TIM2);
+}
+
+static void led_setup(void)
+{
+  /* Set LED pin to output push-pull. */
+#if defined(STM32F1)
+  gpio_set_mode(GPIO_LED_PORT,
+                GPIO_MODE_OUTPUT_2_MHZ,
+                GPIO_CNF_OUTPUT_PUSHPULL,
+                GPIO_LED_PIN);
+#else
+  gpio_mode_setup(GPIO_LED_PORT,
+                  GPIO_MODE_OUTPUT,
+                  GPIO_PUPD_NONE,
+                  GPIO_LED_PIN);
+  gpio_set_output_options(GPIO_LED_PORT,
+                          GPIO_OTYPE_PP,
+                          GPIO_OSPEED_2MHZ,
+                          GPIO_LED_PIN);
+#endif
+}
+
+static void timer_setup(void)
+{
+  /* Setup interrupt. */
+  nvic_enable_irq(NVIC_TIM2_IRQ);
+  timer_enable_irq(TIM2, TIM_DIER_CC1IE);
+
+  timer_set_mode(TIM2,
+                 TIM_CR1_CKD_CK_INT,
+                 TIM_CR1_CMS_EDGE,
+                 TIM_CR1_DIR_UP);
+  timer_disable_preload(TIM2);
+  timer_continuous_mode(TIM2);
+
+  timer_set_prescaler(TIM2, TIMER_PRESCALER);
+  timer_set_period(TIM2, TIMER_PERIOD);
+
+  timer_enable_counter(TIM2);
+}
 
 int main(void)
 {
@@ -57,60 +99,6 @@ int main(void)
   }
 
   return 0;
-}
-
-void rcc_setup(void)
-{
-  /* Setup system clock. */
-#ifdef NUCLEO_F103RB
-  rcc_clock_setup_in_hse_8mhz_out_72mhz();
-#elif NUCLEO_F446RE
-  rcc_clock_setup_pll(&rcc_hse_8mhz_3v3[RCC_CLOCK_3V3_168MHZ]);
-#endif
-
-  rcc_periph_clock_enable(RCC_LED_PORT);
-  rcc_periph_clock_enable(RCC_TIM);
-}
-
-void led_setup(void)
-{
-  /* Set to output Push-Pull. */
-#ifdef NUCLEO_F103RB
-  gpio_set_mode(GPIO_LED_PORT,
-                GPIO_MODE_OUTPUT_2_MHZ,
-                GPIO_CNF_OUTPUT_PUSHPULL,
-                GPIO_LED_PIN);
-#elif NUCLEO_F446RE
-  gpio_mode_setup(GPIO_LED_PORT,
-                  GPIO_MODE_OUTPUT,
-                  GPIO_PUPD_NONE,
-                  GPIO_LED_PIN);
-
-  gpio_set_output_options(GPIO_LED_PORT,
-                          GPIO_OTYPE_PP,
-                          GPIO_OSPEED_2MHZ,
-                          GPIO_LED_PIN);
-#endif
-}
-
-void timer_setup(void)
-{
-  /* Interrupt. */
-  nvic_enable_irq(NVIC_TIM_IRQ);
-  timer_enable_irq(TIM2, TIM_DIER_CC1IE);
-
-  /* Setup timer. */
-  timer_set_mode(TIM2,
-                 TIM_CR1_CKD_CK_INT,
-                 TIM_CR1_CMS_EDGE,
-                 TIM_CR1_DIR_UP);
-  timer_disable_preload(TIM2);
-  timer_continuous_mode(TIM2);
-
-  timer_set_prescaler(TIM2, TIMER_PRESCALER);
-  timer_set_period(TIM2, TIMER_PERIOD);
-
-  timer_enable_counter(TIM2);
 }
 
 /**

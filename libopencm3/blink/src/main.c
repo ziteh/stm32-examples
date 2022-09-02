@@ -1,27 +1,27 @@
 /**
-  *  @file  main.c
-  *  @brief Blinking LED example for STM32 Nucleo-F103RB and F446RE.
-  */
+ * @file   main.c
+ * @brief  Blinking LED example for STM32 Nucleo boards.
+ * @author ZiTe (honmonoh@gmail.com)
+ */
 
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
 
-/* User LED */
-#ifdef NUCLEO_F103RB
-  #define RCC_LED_PORT    (RCC_GPIOA)
-  #define GPIO_LED_PORT   (GPIOA)
-  #define GPIO_LED_PIN    (GPIO5)
-#elif NUCLEO_F446RE
-  #define RCC_LED_PORT    (RCC_GPIOA)
-  #define GPIO_LED_PORT   (GPIOA)
-  #define GPIO_LED_PIN    (GPIO5)
+#if defined(NUCLEO_F103RB)
+  #define RCC_LED_GPIO (RCC_GPIOA)
+  #define GPIO_LED_PORT (GPIOA)
+  #define GPIO_LED_PIN (GPIO5) /* D13. */
+#elif defined(NUCLEO_F446RE)
+  #define RCC_LED_GPIO (RCC_GPIOA)
+  #define GPIO_LED_PORT (GPIOA)
+  #define GPIO_LED_PIN (GPIO5) /* D13. */
 #else
-  #error
+  #error "STM32 Nucleo board not defined."
 #endif
 
-void delay(unsigned int value)
+static void delay(uint32_t value)
 {
-  while(value--)
+  for (uint32_t i = 0; i < value; i++)
   {
     __asm__("nop"); /* Do nothing. */
   }
@@ -30,10 +30,10 @@ void delay(unsigned int value)
 int main(void)
 {
   /* Enable clock. */
-  rcc_periph_clock_enable(RCC_LED_PORT);
-  
-  /* Setup LED pin. */
-#ifdef NUCLEO_F103RB
+  rcc_periph_clock_enable(RCC_LED_GPIO);
+
+  /* Set LED pin to output push-pull. */
+#if defined(STM32F1)
   gpio_set_mode(GPIO_LED_PORT,
                 GPIO_MODE_OUTPUT_2_MHZ,
                 GPIO_CNF_OUTPUT_PUSHPULL,

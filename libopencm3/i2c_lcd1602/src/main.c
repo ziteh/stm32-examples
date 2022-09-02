@@ -1,7 +1,7 @@
 /**
  * @file   main.c
+ * @brief  I2C example with LCD1602(PCF8574T) for STM32 Nucleo boards.
  * @author ZiTe (honmonoh@gmail.com)
- * @brief  I2C example with LCD1602(PCF8574T) for STM32 Nucleo-F103RB and F446RE.
  */
 
 #include "main.h"
@@ -19,39 +19,39 @@ int main(void)
   while (1)
   {
     PCF8574T_displayString("This is NUCLEO, ", 2);
-    delay(DELAY_VALUE);
+    delay(10000000);
     PCF8574T_displayString("a STM32 board.  ", 2);
-    delay(DELAY_VALUE);
+    delay(10000000);
   }
 
   return 0;
 }
 
-void delay(uint32_t value)
+static void delay(uint32_t value)
 {
-  while (value--)
+  for (uint32_t i = 0; i < value; i++)
   {
     __asm__("nop"); /* Do nothing. */
   }
 }
 
-void rcc_setup(void)
+static void rcc_setup(void)
 {
-#ifdef NUCLEO_F103RB
+#if defined(STM32F1)
   rcc_clock_setup_in_hse_8mhz_out_72mhz();
   rcc_periph_clock_enable(RCC_AFIO);
-#elif NUCLEO_F446RE
-  rcc_clock_setup_pll(&rcc_hse_8mhz_3v3[RCC_CLOCK_3V3_168MHZ]);
+#elif defined(STM32F4)
+  rcc_clock_setup_pll(&rcc_hse_8mhz_3v3[RCC_CLOCK_3V3_84MHZ]);
 #endif
 
   rcc_periph_clock_enable(RCC_I2C_GPIO);
   rcc_periph_clock_enable(RCC_I2C1);
 }
 
-void i2c_setup(void)
+static void i2c_setup(void)
 {
-  /* Set to alternate function. */
-#ifdef NUCLEO_F103RB
+  /* Set I2C-SCL & SDA pin to alternate function. */
+#if defined(STM32F1)
   gpio_set_mode(GPIO_I2C_PORT,
                 GPIO_MODE_OUTPUT_50_MHZ,
                 GPIO_CNF_OUTPUT_ALTFN_OPENDRAIN,
@@ -64,7 +64,7 @@ void i2c_setup(void)
    */
   gpio_primary_remap(AFIO_MAPR_SWJ_CFG_FULL_SWJ,
                      AFIO_MAPR_I2C1_REMAP);
-#elif NUCLEO_F446RE
+#else
   gpio_mode_setup(GPIO_I2C_PORT,
                   GPIO_MODE_AF,
                   GPIO_PUPD_NONE,
@@ -76,7 +76,7 @@ void i2c_setup(void)
                           GPIO_I2C_SCL_PIN | GPIO_I2C_SDA_PIN);
 
   gpio_set_af(GPIO_I2C_PORT,
-              GPIO_AF4, /* Ref: Table-11 in DS10693. */
+              GPIO_I2C_AF,
               GPIO_I2C_SCL_PIN | GPIO_I2C_SDA_PIN);
 #endif
 
@@ -96,7 +96,7 @@ void i2c_setup(void)
 /*
  * Ref: https://github.com/brabo/stm32f4-i2c-scan
  */
-void lcd_i2c_write(uint8_t address, uint8_t *data, uint8_t data_length)
+static void lcd_i2c_write(uint8_t address, uint8_t *data, uint8_t data_length)
 {
   i2c_send_start(I2C1);
 
@@ -125,5 +125,5 @@ void lcd_i2c_write(uint8_t address, uint8_t *data, uint8_t data_length)
 
 void lcd_delay(uint16_t ms)
 {
-  delay(ms * DELAY_CONST);
+  delay(ms * 4000); /* XXX. */
 }

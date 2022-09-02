@@ -1,6 +1,7 @@
 /**
- *  @file  main.c
- *  @brief EXTI example for STM32 Nucleo-F103RB and F446RE.
+ * @file   main.c
+ * @brief  EXTI button example for STM32 Nucleo boards.
+ * @author ZiTe (honmonoh@gmail.com)
  */
 
 #include <libopencm3/stm32/rcc.h>
@@ -8,28 +9,28 @@
 #include <libopencm3/stm32/exti.h>
 #include <libopencm3/cm3/nvic.h>
 
-#ifdef NUCLEO_F103RB
-  #define RCC_BUTTON_PORT (RCC_GPIOC)
+#if defined(NUCLEO_F103RB)
+  #define RCC_BUTTON_GPIO (RCC_GPIOC)
   #define GPIO_BUTTON_PORT (GPIOC)
   #define GPIO_BUTTON_PIN (GPIO13)
   #define NVIC_BUTTON_IRQ (NVIC_EXTI15_10_IRQ)
   #define EXTI_BUTTON_SOURCE (EXTI13)
 
-  #define RCC_LED_PORT (RCC_GPIOA)
+  #define RCC_LED_GPIO (RCC_GPIOA)
   #define GPIO_LED_PORT (GPIOA)
-  #define GPIO_LED_PIN (GPIO5)
-#elif NUCLEO_F446RE
-  #define RCC_BUTTON_PORT (RCC_GPIOC)
+  #define GPIO_LED_PIN (GPIO5) /* D13. */
+#elif defined(NUCLEO_F446RE)
+  #define RCC_BUTTON_GPIO (RCC_GPIOC)
   #define GPIO_BUTTON_PORT (GPIOC)
   #define GPIO_BUTTON_PIN (GPIO13)
   #define NVIC_BUTTON_IRQ (NVIC_EXTI15_10_IRQ)
   #define EXTI_BUTTON_SOURCE (EXTI13)
 
-  #define RCC_LED_PORT (RCC_GPIOA)
+  #define RCC_LED_GPIO (RCC_GPIOA)
   #define GPIO_LED_PORT (GPIOA)
-  #define GPIO_LED_PIN (GPIO5)
+  #define GPIO_LED_PIN (GPIO5) /* D13. */
 #else
-  #error
+  #error "STM32 Nucleo board not defined."
 #endif
 
 #define DELAY_VALUE_A ((uint32_t)500000)
@@ -37,18 +38,18 @@
 
 uint32_t delay_value = DELAY_VALUE_A;
 
-void delay(uint32_t value)
+static void delay(uint32_t value)
 {
-  while (value--)
+  for (uint32_t i = 0; i < value; i++)
   {
     __asm__("nop"); /* Do nothing. */
   }
 }
 
-void led_setup(void)
+static void led_setup(void)
 {
-  /* Set up output Push-Pull. */
-#ifdef NUCLEO_F103RB
+  /* Set LED pin to output push-pull. */
+#if defined(STM32F1)
   gpio_set_mode(GPIO_LED_PORT,
                 GPIO_MODE_OUTPUT_2_MHZ,
                 GPIO_CNF_OUTPUT_PUSHPULL,
@@ -58,7 +59,6 @@ void led_setup(void)
                   GPIO_MODE_OUTPUT,
                   GPIO_PUPD_NONE,
                   GPIO_LED_PIN);
-
   gpio_set_output_options(GPIO_LED_PORT,
                           GPIO_OTYPE_PP,
                           GPIO_OSPEED_2MHZ,
@@ -66,10 +66,10 @@ void led_setup(void)
 #endif
 }
 
-void button_setup(void)
+static void button_setup(void)
 {
-  /* Set to input floating. */
-#ifdef NUCLEO_F103RB
+  /* Set button pin to input floating. */
+#if defined(STM32F1)
   gpio_set_mode(GPIO_BUTTON_PORT,
                 GPIO_MODE_INPUT,
                 GPIO_CNF_INPUT_FLOAT,
@@ -88,13 +88,13 @@ void button_setup(void)
   exti_enable_request(EXTI_BUTTON_SOURCE);
 }
 
-void rcc_setup(void)
+static void rcc_setup(void)
 {
-  rcc_periph_clock_enable(RCC_LED_PORT);
-  rcc_periph_clock_enable(RCC_BUTTON_PORT);
+  rcc_periph_clock_enable(RCC_LED_GPIO);
+  rcc_periph_clock_enable(RCC_BUTTON_GPIO);
 
   /* For EXTI. */
-#ifdef NUCLEO_F103RB
+#if defined(STM32F1)
   rcc_periph_clock_enable(RCC_AFIO);
 #else
   rcc_periph_clock_enable(RCC_SYSCFG);
