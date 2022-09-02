@@ -1,3 +1,6 @@
 [submodule "libopencm3/i2c/lib/PCF8574T_LCD_Driver"]
-	path = libopencm3/i2c/lib/PCF8574T_LCD_Driver
+	path = libopencm3/i2c_lcd1602/lib/PCF8574T_LCD_Driver
 	url = https://github.com/toripoyo/PCF8574T_LCD_Driver.git
+[submodule "libopencm3/i2c_mpu9250_imu/lib/mpu9250"]
+	path = libopencm3/i2c_mpu9250_imu/lib/mpu9250
+	url = https://github.com/IvanVnucec/MPU9250.git
