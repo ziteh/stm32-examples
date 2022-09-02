@@ -1,7 +1,7 @@
 /**
  * @file   main.h
  * @author ZiTe (honmonoh@gmail.com)
- * @brief  I2C example for STM32 Nucleo-F103RB and F446RE.
+ * @brief  I2C example with LCD1602(PCF8574T) for STM32 Nucleo-F103RB and F446RE.
  */
 
 #ifndef __MAIN_H
