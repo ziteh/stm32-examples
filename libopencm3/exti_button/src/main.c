@@ -55,14 +55,8 @@ static void led_setup(void)
                 GPIO_CNF_OUTPUT_PUSHPULL,
                 GPIO_LED_PIN);
 #else
-  gpio_mode_setup(GPIO_LED_PORT,
-                  GPIO_MODE_OUTPUT,
-                  GPIO_PUPD_NONE,
-                  GPIO_LED_PIN);
-  gpio_set_output_options(GPIO_LED_PORT,
-                          GPIO_OTYPE_PP,
-                          GPIO_OSPEED_2MHZ,
-                          GPIO_LED_PIN);
+  gpio_mode_setup(GPIO_LED_PORT, GPIO_MODE_OUTPUT,GPIO_PUPD_NONE, GPIO_LED_PIN);
+  gpio_set_output_options(GPIO_LED_PORT,GPIO_OTYPE_PP, GPIO_OSPEED_2MHZ, GPIO_LED_PIN);
 #endif
 }
 
@@ -70,15 +64,9 @@ static void button_setup(void)
 {
   /* Set button pin to input floating. */
 #if defined(STM32F1)
-  gpio_set_mode(GPIO_BUTTON_PORT,
-                GPIO_MODE_INPUT,
-                GPIO_CNF_INPUT_FLOAT,
-                GPIO_BUTTON_PIN);
+  gpio_set_mode(GPIO_BUTTON_PORT, GPIO_MODE_INPUT, GPIO_CNF_INPUT_FLOAT, GPIO_BUTTON_PIN);
 #else
-  gpio_mode_setup(GPIO_BUTTON_PORT,
-                  GPIO_MODE_INPUT,
-                  GPIO_PUPD_NONE,
-                  GPIO_BUTTON_PIN);
+  gpio_mode_setup(GPIO_BUTTON_PORT, GPIO_MODE_INPUT, GPIO_PUPD_NONE, GPIO_BUTTON_PIN);
 #endif
 
   /* Set up interrupt. */

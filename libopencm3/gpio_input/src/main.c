@@ -33,30 +33,30 @@ int main(void)
   rcc_periph_clock_enable(RCC_LED_GPIO);
   rcc_periph_clock_enable(RCC_BUTTON_GPIO);
 
+  /* Set LED pin to output push-pull.
+   * Set button pin to input floating.
+   */
 #if defined(STM32F1)
-  /* Set LED pin to output push-pull. */
   gpio_set_mode(GPIO_LED_PORT,
                 GPIO_MODE_OUTPUT_2_MHZ,
                 GPIO_CNF_OUTPUT_PUSHPULL,
                 GPIO_LED_PIN);
 
-  /* Set button pin to input floating. */
   gpio_set_mode(GPIO_BUTTON_PORT,
                 GPIO_MODE_INPUT,
                 GPIO_CNF_INPUT_FLOAT,
                 GPIO_BUTTON_PIN);
 #else
-  /* Set LED pin to output push-pull. */
   gpio_mode_setup(GPIO_LED_PORT,
                   GPIO_MODE_OUTPUT,
                   GPIO_PUPD_NONE,
                   GPIO_LED_PIN);
+
   gpio_set_output_options(GPIO_LED_PORT,
                           GPIO_OTYPE_PP,
                           GPIO_OSPEED_2MHZ,
                           GPIO_LED_PIN);
 
-  /* Set button pin to input floating. */
   gpio_mode_setup(GPIO_BUTTON_PORT,
                   GPIO_MODE_INPUT,
                   GPIO_PUPD_NONE,

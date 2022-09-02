@@ -14,16 +14,16 @@
 #define USART_BAUDRATE (9600)
 
 #if defined(NUCLEO_F103RB)
-#define RCC_USART_TX_GPIO (RCC_GPIOA)
-#define GPIO_USART_TX_PORT (GPIOA)
-#define GPIO_USART_TX_PIN (GPIO2) /* D1. */
+  #define RCC_USART_TX_GPIO (RCC_GPIOA)
+  #define GPIO_USART_TX_PORT (GPIOA)
+  #define GPIO_USART_TX_PIN (GPIO2) /* D1. */
 #elif defined(NUCLEO_F446RE)
-#define RCC_USART_TX_GPIO (RCC_GPIOA)
-#define GPIO_USART_TX_PORT (GPIOA)
-#define GPIO_USART_TX_PIN (GPIO2) /* D1. */
-#define GPIO_USART_AF (GPIO_AF7)  /* Ref: Table-11 in DS10693. */
+  #define RCC_USART_TX_GPIO (RCC_GPIOA)
+  #define GPIO_USART_TX_PORT (GPIOA)
+  #define GPIO_USART_TX_PIN (GPIO2) /* D1. */
+  #define GPIO_USART_AF (GPIO_AF7)  /* Ref: Table-11 in DS10693. */
 #else
-#error "STM32 Nucleo board not defined."
+  #error "STM32 Nucleo board not defined."
 #endif
 
 static void delay(uint32_t value)
@@ -53,6 +53,7 @@ static void usart_setup(void)
                   GPIO_MODE_AF,
                   GPIO_PUPD_NONE,
                   GPIO_USART_TX_PIN);
+
   gpio_set_af(GPIO_USART_TX_PORT,
               GPIO_USART_AF,
               GPIO_USART_TX_PIN);

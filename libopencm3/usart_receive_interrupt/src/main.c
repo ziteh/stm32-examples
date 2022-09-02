@@ -97,15 +97,8 @@ static void led_setup(void)
                 GPIO_CNF_OUTPUT_PUSHPULL,
                 GPIO_LED_PIN);
 #else
-  gpio_mode_setup(GPIO_LED_PORT,
-                  GPIO_MODE_OUTPUT,
-                  GPIO_PUPD_NONE,
-                  GPIO_LED_PIN);
-
-  gpio_set_output_options(GPIO_LED_PORT,
-                          GPIO_OTYPE_PP,
-                          GPIO_OSPEED_2MHZ,
-                          GPIO_LED_PIN);
+  gpio_mode_setup(GPIO_LED_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO_LED_PIN);
+  gpio_set_output_options(GPIO_LED_PORT, GPIO_OTYPE_PP, GPIO_OSPEED_2MHZ, GPIO_LED_PIN);
 #endif
 }
 
