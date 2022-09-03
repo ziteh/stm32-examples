@@ -75,8 +75,8 @@ static void timer_setup(void)
   timer_disable_preload(TIM2);
   timer_continuous_mode(TIM2);
 
-  timer_set_prescaler(TIM2, TIMER_PRESCALER); /* Setup TIMx_PSC value. */
-  timer_set_period(TIM2, TIMER_PERIOD);       /* Setup TIMx_ARR value. */
+  timer_set_prescaler(TIM2, TIMER_PRESCALER); /* Setup TIMx_PSC register. */
+  timer_set_period(TIM2, TIMER_PERIOD);       /* Setup TIMx_ARR register. */
 
   timer_enable_counter(TIM2);
 }
