@@ -22,7 +22,7 @@ This repo contains some basic examples for STM32.
 | [I2C (LCD 1602)](./libopencm3/i2c_lcd1602/)                      | :heavy_check_mark: | :heavy_check_mark: |
 
 ## Usage
-1. Install [VSCode](https://code.visualstudio.com) and [PlatformIO IDE for VSCode](https://marketplace.visualstudio.com/items?itemName=platformio.platformio-ide).
+1. Install [VSCode](https://code.visualstudio.com) and [PlatformIO IDE](https://marketplace.visualstudio.com/items?itemName=platformio.platformio-ide).
 2. Clone this repo (some examples contain submodules):
 ```git
 git clone --recurse-submodules https://github.com/ziteh/stm32-examples.git
@@ -32,13 +32,17 @@ or
 git clone https://github.com/ziteh/stm32-examples.git
 git submodule update --init --recursive
 ```
-3. Open example project folder in VSCode, e.g. [blink example](./libopencm3/blink/) .
+3. Open example project folder (e.g. [blink example](./libopencm3/blink/)) in VSCode.
 4. Selecte environment (STM32 board). [Ref](https://docs.platformio.org/en/stable/integration/ide/vscode.html#task-explorer)
 5. Build project and upload to STM32 board. [Ref](https://docs.platformio.org/en/stable/integration/ide/vscode.html)
 
 ## References
 - [libopencm3/libopencm3-examples](https://github.com/libopencm3/libopencm3-examples)
 - [platformio/platform-ststm32](https://github.com/platformio/platform-ststm32)
-- [STM32 Nucleo-64 board user manual (UM1724)](https://www.st.com/resource/en/user_manual/um1724-stm32-nucleo64-boards-mb1136-stmicroelectronics.pdf)
-- [STM32F446RE datasheet (DS10693)](https://www.st.com/resource/en/datasheet/stm32f446re.pdf)
-- [STM32F103RB datasheet (DS5319)](https://www.st.com/resource/en/datasheet/stm32f103rb.pdf)
+- STM32 Nucleo-64 board User manual: [UM1724](https://www.st.com/resource/en/user_manual/um1724-stm32-nucleo64-boards-mb1136-stmicroelectronics.pdf)
+- STM32F103RB
+  - Datasheet: [DS5319](https://www.st.com/resource/en/datasheet/stm32f103rb.pdf)
+  - Reference Manual: [RM0008](https://www.st.com/resource/en/reference_manual/rm0008-stm32f101xx-stm32f102xx-stm32f103xx-stm32f105xx-and-stm32f107xx-advanced-armbased-32bit-mcus-stmicroelectronics.pdf)
+- STM32F446RE
+  - Datasheet: [DS10693](https://www.st.com/resource/en/datasheet/stm32f446re.pdf)
+  - Reference Manual: [RM0390](https://www.st.com/resource/en/reference_manual/rm0390-stm32f446xx-advanced-armbased-32bit-mcus-stmicroelectronics.pdf)
