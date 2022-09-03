@@ -1,7 +1,7 @@
 # STM32 Examples
 This repo contains some basic examples for STM32.
 
-# List
+## List
 ### LibOpenCM3
 [LibOpenCM3](https://github.com/libopencm3/libopencm3) is an open source ARM Cortex-M microcontroller library.
 
