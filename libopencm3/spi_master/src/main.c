@@ -1,56 +1,35 @@
 /**
  * @file   main.c
- * @brief  SPI master mode example for STM32 Nucleo boards.
+ * @brief  SPI master mode example for LibOpenCM3 with STM32.
  * @author ZiTe (honmonoh@gmail.com)
  */
 
-#include <libopencm3/stm32/rcc.h>
-#include <libopencm3/stm32/gpio.h>
-#include <libopencm3/stm32/spi.h>
-#include <libopencm3/stm32/usart.h>
-#include <libopencm3/stm32/exti.h>
-#include <libopencm3/cm3/nvic.h>
+#include "main.h"
 
-#define USART_BAUDRATE (9600)
+int main(void)
+{
+  rcc_setup();
+  usart_setup();
+  spi_setup();
+  spi_rq_setup();
 
-#if defined(NUCLEO_F103RB)
-  #define GPIO_SPI_SCK_MISO_MOSI_PORT (GPIOA)
-  #define GPIO_SPI_SCK_PIN (GPIO5)  /* D13. */
-  #define GPIO_SPI_MISO_PIN (GPIO6) /* D12. */
-  #define GPIO_SPI_MOSI_PIN (GPIO7) /* D11. */
-  #define GPIO_SPI_CS_PORT (GPIOB)
-  #define GPIO_SPI_CS_PIN (GPIO6) /* D10. */
+  usart_send_blocking(USART2, 'M');
+  usart_send_blocking(USART2, 'a');
+  usart_send_blocking(USART2, 's');
+  usart_send_blocking(USART2, 't');
+  usart_send_blocking(USART2, 'e');
+  usart_send_blocking(USART2, 'r');
+  usart_send_blocking(USART2, '\r');
+  usart_send_blocking(USART2, '\n');
 
-  #define GPIO_SPI_RQ_PORT (GPIOC)
-  #define GPIO_SPI_RQ_PIN (GPIO7) /* D9. */
-  #define EXTI_SPI_RQ (EXTI7)
-  #define NVIC_SPI_RQ_IRQ (NVIC_EXTI9_5_IRQ)
+  /* Halt. */
+  while (1)
+  {
+    __asm__("nop"); /* Do nothing. */
+  }
 
-  #define RCC_USART_TXRX_GPIO (RCC_GPIOA)
-  #define GPIO_USART_TXRX_PORT (GPIOA)
-  #define GPIO_USART_TX_PIN (GPIO2) /* D1. */
-  #define GPIO_USART_RX_PIN (GPIO3) /* D0. */
-#elif defined(NUCLEO_F446RE)
-  #define GPIO_SPI_SCK_MISO_MOSI_PORT (GPIOA)
-  #define GPIO_SPI_SCK_PIN (GPIO5)  /* D13. */
-  #define GPIO_SPI_MISO_PIN (GPIO6) /* D12. */
-  #define GPIO_SPI_MOSI_PIN (GPIO7) /* D11. */
-  #define GPIO_SPI_CS_PORT (GPIOB)
-  #define GPIO_SPI_CS_PIN (GPIO6) /* D10. */
-  #define GPIO_SPI_AF (GPIO_AF5)  /* Ref: Table-11 in DS10693. */
-
-  #define GPIO_SPI_RQ_PORT (GPIOC)
-  #define GPIO_SPI_RQ_PIN (GPIO7) /* D9. */
-  #define EXTI_SPI_RQ (EXTI7)
-  #define NVIC_SPI_RQ_IRQ (NVIC_EXTI9_5_IRQ)
-
-  #define GPIO_USART_TXRX_PORT (GPIOA)
-  #define GPIO_USART_TX_PIN (GPIO2) /* D1. */
-  #define GPIO_USART_RX_PIN (GPIO3) /* D0. */
-  #define GPIO_USART_AF (GPIO_AF7)  /* Ref: Table-11 in DS10693. */
-#else
-  #error "STM32 Nucleo board not defined."
-#endif
+  return 0;
+}
 
 static void spi_select(void)
 {
@@ -186,31 +165,6 @@ static void usart_setup(void)
   usart_set_mode(USART2, USART_MODE_TX_RX);
 
   usart_enable(USART2);
-}
-
-int main(void)
-{
-  rcc_setup();
-  usart_setup();
-  spi_setup();
-  spi_rq_setup();
-
-  usart_send_blocking(USART2, 'M');
-  usart_send_blocking(USART2, 'a');
-  usart_send_blocking(USART2, 's');
-  usart_send_blocking(USART2, 't');
-  usart_send_blocking(USART2, 'e');
-  usart_send_blocking(USART2, 'r');
-  usart_send_blocking(USART2, '\r');
-  usart_send_blocking(USART2, '\n');
-
-  /* Halt. */
-  while (1)
-  {
-    __asm__("nop"); /* Do nothing. */
-  }
-
-  return 0;
 }
 
 /**

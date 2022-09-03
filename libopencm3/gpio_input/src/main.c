@@ -1,6 +1,6 @@
 /**
  * @file   main.c
- * @brief  Polling button example for STM32 Nucleo boards.
+ * @brief  Polling button example for LibOpenCM3 with STM32.
  * @author ZiTe (honmonoh@gmail.com)
  */
 
@@ -24,7 +24,7 @@
   #define GPIO_LED_PORT (GPIOA)
   #define GPIO_LED_PIN (GPIO5) /* D13. */
 #else
-  #error "STM32 Nucleo board not defined."
+  #error "STM32 board not defined."
 #endif
 
 int main(void)

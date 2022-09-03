@@ -1,6 +1,6 @@
 /**
  * @file   main.c
- * @brief  USART with printf() function for STM32 Nucleo boards.
+ * @brief  USART with printf() function for LibOpenCM3 with STM32.
  * @author ZiTe (honmonoh@gmail.com)
  * @remark Reference: https://github.com/libopencm3/libopencm3-examples/blob/master/examples/stm32/f1/stm32-h103/usart_printf/usart_printf.c
  */
@@ -23,7 +23,7 @@
   #define GPIO_USART_TX_PIN (GPIO2) /* D1. */
   #define GPIO_USART_AF (GPIO_AF7)  /* Ref: Table-11 in DS10693. */
 #else
-  #error "STM32 Nucleo board not defined."
+  #error "STM32 board not defined."
 #endif
 
 static void delay(uint32_t value)

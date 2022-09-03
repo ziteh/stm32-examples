@@ -1,65 +1,33 @@
 /**
  * @file   main.c
- * @brief  SPI slave mode example for STM32 Nucleo boards.
+ * @brief  SPI slave mode example for LibOpenCM3 with STM32.
  * @author ZiTe (honmonoh@gmail.com)
  */
 
-#include <libopencm3/stm32/rcc.h>
-#include <libopencm3/stm32/gpio.h>
-#include <libopencm3/stm32/spi.h>
-#include <libopencm3/stm32/usart.h>
-#include <libopencm3/stm32/exti.h>
-#include <libopencm3/cm3/nvic.h>
+#include "main.h"
 
-#define USART_BAUDRATE (9600)
-
-#if defined(NUCLEO_F103RB)
-  #define GPIO_SPI_SCK_MISO_MOSI_PORT (GPIOA)
-  #define GPIO_SPI_SCK_PIN (GPIO5)  /* D13. */
-  #define GPIO_SPI_MISO_PIN (GPIO6) /* D12. */
-  #define GPIO_SPI_MOSI_PIN (GPIO7) /* D11. */
-  #define GPIO_SPI_CS_PORT (GPIOB)
-  #define GPIO_SPI_CS_PIN (GPIO6) /* D10. */
-  #define EXTI_SPI_CS (EXTI5)
-  #define NVIC_SPI_CS_IRQ (NVIC_EXTI9_5_IRQ)
-
-  #define GPIO_SPI_RQ_PORT (GPIOC)
-  #define GPIO_SPI_RQ_PIN (GPIO7) /* D9. */
-
-  #define RCC_USART_TXRX_GPIO (RCC_GPIOA)
-  #define GPIO_USART_TXRX_PORT (GPIOA)
-  #define GPIO_USART_TX_PIN (GPIO2) /* D1. */
-  #define GPIO_USART_RX_PIN (GPIO3) /* D0. */
-#elif defined(NUCLEO_F446RE)
-  #define GPIO_SPI_SCK_MISO_MOSI_PORT (GPIOA)
-  #define GPIO_SPI_SCK_PIN (GPIO5)  /* D13. */
-  #define GPIO_SPI_MISO_PIN (GPIO6) /* D12. */
-  #define GPIO_SPI_MOSI_PIN (GPIO7) /* D11. */
-  #define GPIO_SPI_CS_PORT (GPIOB)
-  #define GPIO_SPI_CS_PIN (GPIO6) /* D10. */
-  #define EXTI_SPI_CS (EXTI5)
-  #define NVIC_SPI_CS_IRQ (NVIC_EXTI9_5_IRQ)
-  #define GPIO_SPI_AF (GPIO_AF5) /* Ref: Table-11 in DS10693. */
-
-  #define GPIO_SPI_RQ_PORT (GPIOC)
-  #define GPIO_SPI_RQ_PIN (GPIO7) /* D9. */
-
-  #define GPIO_USART_TXRX_PORT (GPIOA)
-  #define GPIO_USART_TX_PIN (GPIO2) /* D1. */
-  #define GPIO_USART_RX_PIN (GPIO3) /* D0. */
-  #define GPIO_USART_AF (GPIO_AF7)  /* Ref: Table-11 in DS10693. */
-#else
-  #error "STM32 Nucleo board not defined."
-#endif
-
-static void spi_rq_set(void)
+int main(void)
 {
-  gpio_clear(GPIO_SPI_RQ_PORT, GPIO_SPI_RQ_PIN);
-}
+  rcc_setup();
+  usart_setup();
+  spi_setup();
+  spi_rq_setup();
 
-static void spi_rq_reset(void)
-{
-  gpio_set(GPIO_SPI_RQ_PORT, GPIO_SPI_RQ_PIN);
+  usart_send_blocking(USART2, 's');
+  usart_send_blocking(USART2, 'l');
+  usart_send_blocking(USART2, 'a');
+  usart_send_blocking(USART2, 'v');
+  usart_send_blocking(USART2, 'e');
+  usart_send_blocking(USART2, '\r');
+  usart_send_blocking(USART2, '\n');
+
+  /* Halt. */
+  while (1)
+  {
+    __asm__("nop"); /* Do nothing. */
+  }
+
+  return 0;
 }
 
 static void rcc_setup(void)
@@ -76,6 +44,45 @@ static void rcc_setup(void)
   rcc_periph_clock_enable(RCC_GPIOC);
   rcc_periph_clock_enable(RCC_USART2);
   rcc_periph_clock_enable(RCC_SPI1);
+}
+
+static void usart_setup(void)
+{
+  /* Set USART-Tx & Rx pin to alternate function. */
+#if defined(STM32F1)
+  gpio_set_mode(GPIO_USART_TXRX_PORT,
+                GPIO_MODE_OUTPUT_50_MHZ,
+                GPIO_CNF_OUTPUT_ALTFN_PUSHPULL,
+                GPIO_USART_TX_PIN);
+
+  gpio_set_mode(GPIO_USART_TXRX_PORT,
+                GPIO_MODE_INPUT,
+                GPIO_CNF_INPUT_FLOAT,
+                GPIO_USART_RX_PIN);
+#else
+  gpio_mode_setup(GPIO_USART_TXRX_PORT,
+                  GPIO_MODE_AF,
+                  GPIO_PUPD_NONE,
+                  GPIO_USART_TX_PIN | GPIO_USART_RX_PIN);
+
+  gpio_set_af(GPIO_USART_TXRX_PORT,
+              GPIO_USART_AF,
+              GPIO_USART_TX_PIN | GPIO_USART_RX_PIN);
+#endif
+
+  /* Setup interrupt. */
+  nvic_enable_irq(NVIC_USART2_IRQ);
+  usart_enable_rx_interrupt(USART2); /* Enable receive interrupt. */
+
+  /* Setup USART config. */
+  usart_set_baudrate(USART2, USART_BAUDRATE);
+  usart_set_databits(USART2, 8);
+  usart_set_stopbits(USART2, USART_STOPBITS_1);
+  usart_set_parity(USART2, USART_PARITY_NONE);
+  usart_set_flow_control(USART2, USART_FLOWCONTROL_NONE);
+  usart_set_mode(USART2, USART_MODE_TX_RX);
+
+  usart_enable(USART2);
 }
 
 static void spi_setup(void)
@@ -150,63 +157,14 @@ static void spi_rq_setup(void)
   spi_rq_reset();
 }
 
-static void usart_setup(void)
+static void spi_rq_set(void)
 {
-  /* Set USART-Tx & Rx pin to alternate function. */
-#if defined(STM32F1)
-  gpio_set_mode(GPIO_USART_TXRX_PORT,
-                GPIO_MODE_OUTPUT_50_MHZ,
-                GPIO_CNF_OUTPUT_ALTFN_PUSHPULL,
-                GPIO_USART_TX_PIN);
-
-  gpio_set_mode(GPIO_USART_TXRX_PORT,
-                GPIO_MODE_INPUT,
-                GPIO_CNF_INPUT_FLOAT,
-                GPIO_USART_RX_PIN);
-#else
-  gpio_mode_setup(GPIO_USART_TXRX_PORT,
-                  GPIO_MODE_AF,
-                  GPIO_PUPD_NONE,
-                  GPIO_USART_TX_PIN | GPIO_USART_RX_PIN);
-
-  gpio_set_af(GPIO_USART_TXRX_PORT,
-              GPIO_USART_AF,
-              GPIO_USART_TX_PIN | GPIO_USART_RX_PIN);
-#endif
-
-  /* Setup interrupt. */
-  nvic_enable_irq(NVIC_USART2_IRQ);
-  usart_enable_rx_interrupt(USART2); /* Enable receive interrupt. */
-
-  /* Setup USART config. */
-  usart_set_baudrate(USART2, USART_BAUDRATE);
-  usart_set_databits(USART2, 8);
-  usart_set_stopbits(USART2, USART_STOPBITS_1);
-  usart_set_parity(USART2, USART_PARITY_NONE);
-  usart_set_flow_control(USART2, USART_FLOWCONTROL_NONE);
-  usart_set_mode(USART2, USART_MODE_TX_RX);
-
-  usart_enable(USART2);
+  gpio_clear(GPIO_SPI_RQ_PORT, GPIO_SPI_RQ_PIN);
 }
 
-int main(void)
+static void spi_rq_reset(void)
 {
-  rcc_setup();
-  usart_setup();
-  spi_setup();
-  spi_rq_setup();
-
-  usart_send_blocking(USART2, 's');
-  usart_send_blocking(USART2, '\r');
-  usart_send_blocking(USART2, '\n');
-
-  /* Halt. */
-  while (1)
-  {
-    __asm__("nop"); /* Do nothing. */
-  }
-
-  return 0;
+  gpio_set(GPIO_SPI_RQ_PORT, GPIO_SPI_RQ_PIN);
 }
 
 /**

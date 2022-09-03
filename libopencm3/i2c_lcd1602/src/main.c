@@ -1,6 +1,6 @@
 /**
  * @file   main.c
- * @brief  I2C example with LCD1602(PCF8574T) for STM32 Nucleo boards.
+ * @brief  I2C example with LCD1602(PCF8574T) for LibOpenCM3 with STM32.
  * @author ZiTe (honmonoh@gmail.com)
  */
 

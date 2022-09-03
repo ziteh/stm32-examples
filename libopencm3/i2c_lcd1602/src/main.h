@@ -1,6 +1,6 @@
 /**
  * @file   main.h
- * @brief  I2C example with LCD1602(PCF8574T) for STM32 Nucleo boards.
+ * @brief  I2C example with LCD1602(PCF8574T) for LibOpenCM3 with STM32.
  * @author ZiTe (honmonoh@gmail.com)
  */
 
@@ -29,7 +29,7 @@ extern "C"
   #define GPIO_I2C_SDA_PIN (GPIO9) /* D14. */
   #define GPIO_I2C_AF (GPIO_AF4)   /* Ref: Table-11 in DS10693. */
 #else
-  #error "STM32 Nucleo board not defined."
+  #error "STM32 board not defined."
 #endif
 
   static void rcc_setup(void);

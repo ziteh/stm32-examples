@@ -1,6 +1,6 @@
 /**
  * @file   main.h
- * @brief  Multi channel ADC example for STM32 Nucleo boards.
+ * @brief  Multi channel ADC example for LibOpenCM3 with STM32.
  * @author ZiTe (honmonoh@gmail.com)
  */
 
@@ -53,7 +53,7 @@ extern "C"
   #define GPIO_LED_PORT (GPIOA)
   #define GPIO_LED_PIN (GPIO5) /* D13. */
 #else
-  #error "STM32 Nucleo board not defined."
+  #error "STM32 board not defined."
 #endif
 
   static void rcc_setup(void);

@@ -1,6 +1,6 @@
 /**
  * @file   main.c
- * @brief  Timer example for STM32 Nucleo boards.
+ * @brief  Timer example for LibOpenCM3 with STM32.
  * @author ZiTe (honmonoh@gmail.com)
  */
 
@@ -31,7 +31,7 @@
   #define GPIO_LED_PORT (GPIOA)
   #define GPIO_LED_PIN (GPIO5) /* D13. */
 #else
-  #error "STM32 Nucleo board not defined."
+  #error "STM32 board not defined."
 #endif
 
 static void rcc_setup(void)

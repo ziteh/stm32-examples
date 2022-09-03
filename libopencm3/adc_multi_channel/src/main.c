@@ -1,6 +1,6 @@
 /**
  * @file   main.c
- * @brief  Multi channel ADC example for STM32 Nucleo boards.
+ * @brief  Multi channel ADC example for LibOpenCM3 with STM32.
  * @author ZiTe (honmonoh@gmail.com)
  */
 

@@ -1,6 +1,6 @@
 /**
  * @file   main.c
- * @brief  PWM(Pulse-width modulation) example for STM32 Nucleo boards.
+ * @brief  PWM(Pulse-width modulation) example for LibOpenCM3 with STM32.
  * @author ZiTe (honmonoh@gmail.com)
  * @remark Reference: https://bdebyl.net/post/stm32-part1/
  */
@@ -33,7 +33,7 @@
   #define GPIO_PWM_PIN (GPIO7)   /* D11. */
   #define GPIO_PWM_AF (GPIO_AF2) /* Ref: Table-11 in DS10693. */
 #else
-  #error "STM32 Nucleo board not defined."
+  #error "STM32 board not defined."
 #endif
 
 static void rcc_setup(void)
