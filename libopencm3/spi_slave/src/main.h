@@ -2,6 +2,7 @@
  * @file   main.h
  * @brief  SPI slave mode example for LibOpenCM3 with STM32.
  * @author ZiTe (honmonoh@gmail.com)
+ * @copyright MIT License
  */
 
 #ifndef MAIN_H

@@ -2,6 +2,7 @@
  * @file   main.c
  * @brief  SPI master mode example for LibOpenCM3 with STM32.
  * @author ZiTe (honmonoh@gmail.com)
+ * @copyright MIT License
  */
 
 #include "main.h"

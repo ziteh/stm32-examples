@@ -2,6 +2,7 @@
  * @file   main.h
  * @brief  I2C example with LCD1602(PCF8574T) for LibOpenCM3 with STM32.
  * @author ZiTe (honmonoh@gmail.com)
+ * @copyright MIT License
  */
 
 #ifndef MAIN_H

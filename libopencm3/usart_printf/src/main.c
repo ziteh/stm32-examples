@@ -2,6 +2,7 @@
  * @file   main.c
  * @brief  USART with printf() function for LibOpenCM3 with STM32.
  * @author ZiTe (honmonoh@gmail.com)
+ * @copyright MIT License
  * @remark Reference: https://github.com/libopencm3/libopencm3-examples/blob/master/examples/stm32/f1/stm32-h103/usart_printf/usart_printf.c
  */
 

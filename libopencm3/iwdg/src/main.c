@@ -2,6 +2,7 @@
  * @file   main.c
  * @brief  IWDG (Independent watchdog) example for LibOpenCM3 with STM32.
  * @author ZiTe (honmonoh@gmail.com)
+ * @copyright MIT License
  */
 
 #include <libopencm3/stm32/rcc.h>

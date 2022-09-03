@@ -2,6 +2,7 @@
  * @file   main.c
  * @brief  Multi channel ADC example for LibOpenCM3 with STM32.
  * @author ZiTe (honmonoh@gmail.com)
+ * @copyright MIT License
  */
 
 #include "main.h"
@@ -65,14 +66,6 @@ static uint16_t get_adc_value(int channel)
   }
 
   return adc_read_regular(ADC1); /* Read ADC value. */
-}
-
-static void delay(uint32_t value)
-{
-  for (uint32_t i = 0; i < value; i++)
-  {
-    __asm__("nop"); /* Do nothing. */
-  }
 }
 
 static void rcc_setup(void)
@@ -151,6 +144,14 @@ static void usart_setup(void)
   usart_set_mode(USART2, USART_MODE_TX);
 
   usart_enable(USART2);
+}
+
+static void delay(uint32_t value)
+{
+  for (uint32_t i = 0; i < value; i++)
+  {
+    __asm__("nop"); /* Do nothing. */
+  }
 }
 
 int _write(int file, char *ptr, int len)

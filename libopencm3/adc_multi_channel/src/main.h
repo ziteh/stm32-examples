@@ -2,6 +2,7 @@
  * @file   main.h
  * @brief  Multi channel ADC example for LibOpenCM3 with STM32.
  * @author ZiTe (honmonoh@gmail.com)
+ * @copyright MIT License
  */
 
 #ifndef MAIN_H
@@ -63,7 +64,6 @@ extern "C"
 
   static uint16_t get_adc_value(int channel);
   static void delay(uint32_t value);
-
   int _write(int file, char *ptr, int len);
 
 #ifdef __cplusplus
