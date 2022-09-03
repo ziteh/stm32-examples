@@ -14,14 +14,14 @@
 
 /* If apb_presc = /1 than timer_clock = apb_clock, else timer_clock = 2* apb_clock. */
 #define TIMER_CLOCK (rcc_apb1_frequency * 2)
-#define TIMER_PRESCALER (TIMER_CLOCK / 100000 - 1)
+#define TIMER_PRESCALER (TIMER_CLOCK / 100000 - 1) /* TIMx_PSC value. */
 
 /*
  * f_goal = f_timer / [(Prescaler + 1) * (Period + 1)]
  * so
  * Period = {f_timer / [(Prescaler + 1) * f_goal]} - 1
  */
-#define TIMER_PERIOD ((TIMER_CLOCK / ((TIMER_PRESCALER + 1) * GOAL_FREQUENCY)) - 1)
+#define TIMER_PERIOD ((TIMER_CLOCK / ((TIMER_PRESCALER + 1) * GOAL_FREQUENCY)) - 1) /* TIMx_ARR value. */
 
 #if defined(NUCLEO_F103RB)
   #define RCC_LED_GPIO (RCC_GPIOA)
@@ -75,8 +75,8 @@ static void timer_setup(void)
   timer_disable_preload(TIM2);
   timer_continuous_mode(TIM2);
 
-  timer_set_prescaler(TIM2, TIMER_PRESCALER);
-  timer_set_period(TIM2, TIMER_PERIOD);
+  timer_set_prescaler(TIM2, TIMER_PRESCALER); /* Setup TIMx_PSC value. */
+  timer_set_period(TIM2, TIMER_PERIOD);       /* Setup TIMx_ARR value. */
 
   timer_enable_counter(TIM2);
 }
