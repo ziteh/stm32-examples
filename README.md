@@ -21,6 +21,12 @@ This repo contains some basic examples for STM32.
 | [SPI (Slave mode)](./libopencm3/spi_slave/)                      | :heavy_check_mark: | :heavy_check_mark: |                    |
 | [I2C (LCD 1602)](./libopencm3/i2c_lcd1602/)                      | :heavy_check_mark: | :heavy_check_mark: |                    |
 
+### STM32 HAL
+
+| examples \ boards                  | Nucleo-F103RB | Nucleo-F446RE |   Nucleo-G431KB    |
+| :--------------------------------- | :-----------: | :-----------: | :----------------: |
+| [Blinking LED](./stm32_hal/blink/) |               |               | :heavy_check_mark: |
+
 ## Usage
 1. Install [VSCode](https://code.visualstudio.com) and [PlatformIO IDE](https://marketplace.visualstudio.com/items?itemName=platformio.platformio-ide).
 2. Clone this repo (some examples contain submodules):
