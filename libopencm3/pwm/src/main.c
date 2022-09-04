@@ -71,6 +71,7 @@ static void rcc_setup(void)
 
   rcc_periph_clock_enable(RCC_PWM_GPIO);
   rcc_periph_clock_enable(RCC_TIM3);
+  rcc_periph_reset_pulse(RST_TIM3); /* Reset TIM3 to defaults. */
 }
 
 static void pwm_setup(void)

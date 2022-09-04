@@ -62,6 +62,7 @@ static void rcc_setup(void)
 
   rcc_periph_clock_enable(RCC_LED_GPIO);
   rcc_periph_clock_enable(RCC_TIM2);
+  rcc_periph_reset_pulse(RST_TIM2); /* Reset TIM2 to defaults. */
 }
 
 static void led_setup(void)
