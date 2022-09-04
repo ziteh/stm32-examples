@@ -10,18 +10,34 @@
 #include <libopencm3/stm32/timer.h>
 #include <libopencm3/cm3/nvic.h>
 
-#define GOAL_FREQUENCY (5) /* Goal frequency in Hz. */
+#define GOAL_FREQUENCY (5) /* f_goal, goal frequency in Hz. */
 
-/* If apb_presc = /1 than timer_clock = apb_clock, else timer_clock = 2* apb_clock. */
-#define TIMER_CLOCK (rcc_apb1_frequency * 2)
-#define TIMER_PRESCALER (TIMER_CLOCK / 100000 - 1) /* TIMx_PSC value. */
-
-/*
- * f_goal = f_timer / [(Prescaler + 1) * (Period + 1)]
- * so
- * Period = {f_timer / [(Prescaler + 1) * f_goal]} - 1
+/**
+ * @brief f_timer.
+ * @note If APBx_Presc = /1 than f_timer = APBx_Clock, else f_timer = 2* APBx_Clock.
  */
-#define TIMER_PERIOD ((TIMER_CLOCK / ((TIMER_PRESCALER + 1) * GOAL_FREQUENCY)) - 1) /* TIMx_ARR value. */
+#define TIMER_CLOCK (rcc_apb1_frequency * 2)
+
+/**
+ * @brief f_counter (CK_CNT).
+ */
+#define COUNTER_CLOCK (1000000)
+
+/**
+ * @brief PSC (Prescaler), the value of TIMx_PSC register.
+ * @note f_counter = f_timer / (PSC + 1)
+ *       so,
+ *       PSC = f_timer / f_counter - 1
+ */
+#define TIMER_PRESCALER (TIMER_CLOCK / COUNTER_CLOCK - 1)
+
+/**
+ * @brief ARR (Auto-Reload), the value of TIMx_ARR register.
+ * @note f_goal = f_timer / [(PSC + 1) * (ARR + 1)]
+ *       so,
+ *       ARR = {f_timer / [(PSC + 1) * f_goal]} - 1
+ */
+#define TIMER_PERIOD (((TIMER_CLOCK) / ((TIMER_PRESCALER + 1) * GOAL_FREQUENCY)) - 1)
 
 #if defined(NUCLEO_F103RB)
   #define RCC_LED_GPIO (RCC_GPIOA)
