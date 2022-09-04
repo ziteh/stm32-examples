@@ -16,6 +16,10 @@
   #define RCC_LED_GPIO (RCC_GPIOA)
   #define GPIO_LED_PORT (GPIOA)
   #define GPIO_LED_PIN (GPIO5) /* D13. */
+#elif defined(NUCLEO_G431KB)
+  #define RCC_LED_GPIO (RCC_GPIOB)
+  #define GPIO_LED_PORT (GPIOB)
+  #define GPIO_LED_PIN (GPIO8) /* D13. */
 #else
   #error "STM32 board not defined."
 #endif

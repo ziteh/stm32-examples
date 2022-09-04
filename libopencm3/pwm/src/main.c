@@ -38,7 +38,7 @@
  *       so,
  *       ARR = {f_timer / [(PSC + 1) * f_goal]} - 1
  */
-#define PWM_TIMER_PERIOD (((PWM_TIMER_CLOCK) / ((PWM_TIMER_PRESCALER + 1) * PWM_GOAL_FREQUENCY)) - 1) /* TIMx_ARR value. */
+#define PWM_TIMER_PERIOD (((PWM_TIMER_CLOCK) / ((PWM_TIMER_PRESCALER + 1) * PWM_GOAL_FREQUENCY)) - 1)
 
 /**
  * @brief CCR (Capture/Compare), the value of TIMx_CCRx register.

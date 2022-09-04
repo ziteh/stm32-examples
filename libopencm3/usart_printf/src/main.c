@@ -37,7 +37,7 @@ static void delay(uint32_t value)
 
 static void rcc_setup(void)
 {
-  rcc_periph_clock_enable(RCC_USART_TX_PORT);
+  rcc_periph_clock_enable(RCC_USART_TX_GPIO);
   rcc_periph_clock_enable(RCC_USART2);
 }
 

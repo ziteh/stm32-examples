@@ -3,6 +3,7 @@
  * @brief  SysTick delay example for LibOpenCM3 with STM32.
  * @author ZiTe (honmonoh@gmail.com)
  * @copyright MIT License
+ * @remark Ref: https://lolikitty.pixnet.net/blog/post/142926586
  */
 
 #include <libopencm3/stm32/rcc.h>
@@ -22,14 +23,14 @@
   #error "STM32 board not defined."
 #endif
 
-volatile uint32_t systick_count = 0;
+static volatile uint32_t systick_delay = 0;
 
 static void delay_ms(uint32_t ms)
 {
-  uint32_t wake = systick_count + ms;
-  while (wake > systick_count)
+  systick_delay = ms;
+  while (systick_delay != 0)
   {
-    __asm__("nop"); /* Do nothing. */
+    /* Wait. */
   }
 }
 
@@ -64,13 +65,13 @@ static void systick_setup(void)
    * Set to every 1ms one interrupt.
    *
    * SysTick interrupt every N clock pulses, set reload to N-1.
-   * N = AHB_clock / 8(Prescaler) / 1000(1000 overflows per second).
+   * N = AHB_clock / 8(DIV) / 1000(1000 overflows per second).
    */
   systick_set_clocksource(STK_CSR_CLKSOURCE_AHB_DIV8);
   systick_set_reload(rcc_ahb_frequency / 8 / 1000 - 1);
 
-  systick_counter_enable();
   systick_interrupt_enable();
+  systick_counter_enable();
 }
 
 int main(void)
@@ -93,5 +94,8 @@ int main(void)
  */
 void sys_tick_handler(void)
 {
-  systick_count++;
+  if (systick_delay != 0)
+  {
+    systick_delay--;
+  }
 }
