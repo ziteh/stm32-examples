@@ -38,7 +38,7 @@
  *       so,
  *       ARR = {f_timer / [(PSC + 1) * f_goal]} - 1
  */
-#define PWM_TIMER_PERIOD (((PWM_TIMER_CLOCK) / ((PWM_TIMER_PRESCALER + 1) * PWM_GOAL_FREQUENCY)) - 1)
+#define PWM_TIMER_PERIOD (((PWM_TIMER_CLOCK) / ((PWM_TIMER_PRESCALER + 1) * PWM_GOAL_FREQUENCY)) - 1) /* TIMx_ARR value. */
 
 /**
  * @brief CCR (Capture/Compare), the value of TIMx_CCRx register.
@@ -91,6 +91,7 @@ static void pwm_setup(void)
   timer_set_mode(TIM3, TIM_CR1_CKD_CK_INT, TIM_CR1_CMS_EDGE, TIM_CR1_DIR_UP);
   timer_disable_preload(TIM3);
   timer_continuous_mode(TIM3);
+
   timer_set_prescaler(TIM3, PWM_TIMER_PRESCALER);        /* Setup TIMx_PSC register. */
   timer_set_period(TIM3, PWM_TIMER_PERIOD);              /* Setup TIMx_ARR register. */
   timer_set_oc_value(TIM3, TIM_OC2, PWM_TIMER_OC_VALUE); /* Setup TIMx_CCRx register. */
