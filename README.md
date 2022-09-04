@@ -37,8 +37,11 @@ git submodule update --init --recursive
 5. Build project and upload to STM32 board. [Ref](https://docs.platformio.org/en/stable/integration/ide/vscode.html)
 
 ## References
+### Code
 - [libopencm3/libopencm3-examples](https://github.com/libopencm3/libopencm3-examples)
 - [platformio/platform-ststm32](https://github.com/platformio/platform-ststm32)
+
+### STM32 Documentation
 - [STM32F103RB](https://www.st.com/en/microcontrollers-microprocessors/stm32f103rb.html)
   - Datasheet: [DS5319](https://www.st.com/resource/en/datasheet/stm32f103rb.pdf)
   - Reference Manual: [RM0008](https://www.st.com/resource/en/reference_manual/rm0008-stm32f101xx-stm32f102xx-stm32f103xx-stm32f105xx-and-stm32f107xx-advanced-armbased-32bit-mcus-stmicroelectronics.pdf)
@@ -48,6 +51,6 @@ git submodule update --init --recursive
 - [STM32G431KB](https://www.st.com/en/microcontrollers-microprocessors/stm32g431kb.html)
   - Datasheet: [DS12589](https://www.st.com/resource/en/datasheet/stm32g431kb.pdf)
   - Reference Manual: [RM0440](https://www.st.com/resource/en/reference_manual/rm0440-stm32g4-series-advanced-armbased-32bit-mcus-stmicroelectronics.pdf)
-- STM32 Nucleo board
-  - Nucleo-64 MB1136 User manual: [UM1724](https://www.st.com/resource/en/user_manual/um1724-stm32-nucleo64-boards-mb1136-stmicroelectronics.pdf)
-  - Nucleo-32 MB1430 User manual: [UM2397](https://www.st.com/resource/en/user_manual/um2397-stm32g4-nucleo32-board-mb1430-stmicroelectronics.pdf)
+- STM32 Nucleo board user manual
+  - Nucleo-64 MB1136: [UM1724](https://www.st.com/resource/en/user_manual/um1724-stm32-nucleo64-boards-mb1136-stmicroelectronics.pdf)
+  - Nucleo-32 MB1430: [UM2397](https://www.st.com/resource/en/user_manual/um2397-stm32g4-nucleo32-board-mb1430-stmicroelectronics.pdf)
