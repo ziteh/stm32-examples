@@ -1,6 +1,6 @@
 /**
  * @file   main.h
- * @brief  Multi channel ADC example for LibOpenCM3 with STM32.
+ * @brief  Multi channel ADC example for STM32 based on LibOpenCM3.
  * @author ZiTe (honmonoh@gmail.com)
  * @copyright MIT License
  */

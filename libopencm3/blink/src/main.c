@@ -1,6 +1,6 @@
 /**
  * @file   main.c
- * @brief  Blinking LED example for LibOpenCM3 with STM32.
+ * @brief  Blinking LED example for STM32 based on LibOpenCM3.
  * @author ZiTe (honmonoh@gmail.com)
  * @copyright MIT License
  */

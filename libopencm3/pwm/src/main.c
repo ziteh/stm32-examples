@@ -1,6 +1,6 @@
 /**
  * @file   main.c
- * @brief  PWM(Pulse-width modulation) example for LibOpenCM3 with STM32.
+ * @brief  PWM(Pulse-width modulation) example for STM32 based on LibOpenCM3.
  * @author ZiTe (honmonoh@gmail.com)
  * @copyright MIT License
  * @remark Reference: https://bdebyl.net/post/stm32-part1/

@@ -1,6 +1,6 @@
 /**
  * @file   main.h
- * @brief  I2C example with LCD1602(PCF8574T) for LibOpenCM3 with STM32.
+ * @brief  I2C example with LCD1602(PCF8574T) for STM32 based on LibOpenCM3.
  * @author ZiTe (honmonoh@gmail.com)
  * @copyright MIT License
  */
