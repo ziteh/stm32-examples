@@ -1,6 +1,6 @@
 /**
  * @file   main.c
- * @brief  SysTick delay example for LibOpenCM3 with STM32.
+ * @brief  SysTick delay example for STM32 based on LibOpenCM3.
  * @author ZiTe (honmonoh@gmail.com)
  * @copyright MIT License
  * @remark Ref: https://lolikitty.pixnet.net/blog/post/142926586

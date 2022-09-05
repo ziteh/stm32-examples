@@ -1,6 +1,6 @@
 /**
  * @file   main.c
- * @brief  Timer example for LibOpenCM3 with STM32.
+ * @brief  Timer example for STM32 based on LibOpenCM3.
  * @author ZiTe (honmonoh@gmail.com)
  * @copyright MIT License
  */
