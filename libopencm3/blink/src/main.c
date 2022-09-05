@@ -8,18 +8,21 @@
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
 
-#if defined(NUCLEO_F103RB)
+/* User LED (LD2) connected to Arduino-D13 pin. */
+#if defined(NUCLEO_F103RB) || \
+    defined(NUCLEO_F401RE) || \
+    defined(NUCLEO_F446RE)
   #define RCC_LED_GPIO (RCC_GPIOA)
   #define GPIO_LED_PORT (GPIOA)
-  #define GPIO_LED_PIN (GPIO5) /* D13. */
-#elif defined(NUCLEO_F446RE)
-  #define RCC_LED_GPIO (RCC_GPIOA)
-  #define GPIO_LED_PORT (GPIOA)
-  #define GPIO_LED_PIN (GPIO5) /* D13. */
+  #define GPIO_LED_PIN (GPIO5)
+#elif defined(NUCLEO_F302R8)
+  #define RCC_LED_GPIO (RCC_GPIOB)
+  #define GPIO_LED_PORT (GPIOB)
+  #define GPIO_LED_PIN (GPIO13)
 #elif defined(NUCLEO_G431KB)
   #define RCC_LED_GPIO (RCC_GPIOB)
   #define GPIO_LED_PORT (GPIOB)
-  #define GPIO_LED_PIN (GPIO8) /* D13. */
+  #define GPIO_LED_PIN (GPIO8)
 #else
   #error "STM32 board not defined."
 #endif
