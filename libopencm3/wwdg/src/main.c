@@ -19,15 +19,15 @@
 #define WWDG_MS(v) (1.0 / (rcc_apb1_frequency / 1000) * 4096 * 8 * (v))
 
 #if defined(NUCLEO_F103RB)
-#define RCC_LED_GPIO (RCC_GPIOA)
-#define GPIO_LED_PORT (GPIOA)
-#define GPIO_LED_PIN (GPIO5) /* D13. */
+  #define RCC_LED_GPIO (RCC_GPIOA)
+  #define GPIO_LED_PORT (GPIOA)
+  #define GPIO_LED_PIN (GPIO5) /* D13. */
 #elif defined(NUCLEO_F446RE)
-#define RCC_LED_GPIO (RCC_GPIOA)
-#define GPIO_LED_PORT (GPIOA)
-#define GPIO_LED_PIN (GPIO5) /* D13. */
+  #define RCC_LED_GPIO (RCC_GPIOA)
+  #define GPIO_LED_PORT (GPIOA)
+  #define GPIO_LED_PIN (GPIO5) /* D13. */
 #else
-#error "STM32 board not defined."
+  #error "STM32 board not defined."
 #endif
 
 static volatile uint32_t systick_delay = 0;

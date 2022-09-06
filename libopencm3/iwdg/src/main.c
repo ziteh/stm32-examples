@@ -8,6 +8,8 @@
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/iwdg.h>
+#include <libopencm3/cm3/systick.h>
+#include <libopencm3/cm3/nvic.h>
 
 #if defined(NUCLEO_F103RB)
   #define RCC_LED_GPIO (RCC_GPIOA)
@@ -21,12 +23,28 @@
   #error "STM32 board not defined."
 #endif
 
-static void delay(uint32_t value)
+static volatile uint32_t systick_delay = 0;
+
+static void delay_ms(uint32_t value)
 {
-  for (uint32_t i = 0; i < value; i++)
+  systick_delay = value;
+  while (systick_delay != 0)
   {
-    __asm__("nop"); /* Do nothing. */
+    /* Wait. */
   }
+}
+
+static void systick_setup(void)
+{
+  /*
+   * SysTick interrupt every N clock pulses, set reload to N-1.
+   * N = AHB_clock / 8(DIV) / 1000(1000 overflows per second).
+   */
+  systick_set_clocksource(STK_CSR_CLKSOURCE_AHB_DIV8);
+  systick_set_reload(rcc_ahb_frequency / 8 / 1000 - 1);
+
+  systick_interrupt_enable();
+  systick_counter_enable();
 }
 
 static void rcc_setup(void)
@@ -43,7 +61,7 @@ static void rcc_setup(void)
 static void iwdg_setup(void)
 {
   iwdg_reset();
-  iwdg_set_period_ms(5000);
+  iwdg_set_period_ms(300);
   iwdg_start();
 }
 
@@ -61,24 +79,33 @@ static void led_setup(void)
 int main(void)
 {
   rcc_setup();
+  systick_setup();
   led_setup();
 
-  gpio_set(GPIO_LED_PORT, GPIO_LED_PIN);
-  delay(20000000);
   gpio_clear(GPIO_LED_PORT, GPIO_LED_PIN);
-  delay(2000000);
+  delay_ms(10);
   gpio_set(GPIO_LED_PORT, GPIO_LED_PIN);
-  delay(20000000);
+  delay_ms(2000);
 
   iwdg_setup(); /* Setup and start IWDG. */
 
   while (1)
   {
     gpio_toggle(GPIO_LED_PORT, GPIO_LED_PIN); /* LED on/off. */
-    delay(2000000);
-
-    iwdg_reset();
+    delay_ms(200);
+    iwdg_reset(); /* Refresh. */
   }
 
   return 0;
+}
+
+/**
+ * @brief  SysTick handler.
+ */
+void sys_tick_handler(void)
+{
+  if (systick_delay != 0)
+  {
+    systick_delay--;
+  }
 }
