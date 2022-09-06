@@ -1,6 +1,6 @@
 /**
  * @file   main.c
- * @brief  IWDG (Independent watchdog) example for STM32 based on LibOpenCM3.
+ * @brief  WWDG (Window watchdog) example for STM32 based on LibOpenCM3.
  * @author ZiTe (honmonoh@gmail.com)
  * @copyright MIT License
  * @remark Ref: https://www.hackster.io/vasam2230/stm32-window-watchdog-wwdg-dda290
