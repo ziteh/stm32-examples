@@ -64,7 +64,6 @@ extern "C"
 
   static uint16_t get_adc_value(int channel);
   static void delay(uint32_t value);
-  int _write(int file, char *ptr, int len);
 
 #ifdef __cplusplus
 }
