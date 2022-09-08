@@ -16,6 +16,7 @@ This repo contains some basic examples for STM32.
 | [SysTick delay](./libopencm3/systick/)                           | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |
 | [PWM](./libopencm3/pwm/)                                         | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |
 | [IWDG](./libopencm3/iwdg/)                                       | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |
+| [WWDG](./libopencm3/wwdg/)                                       | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |
 | [ADC (Multi channel)](./libopencm3/adc_multi_channel/)           | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |
 | [SPI (Master mode)](./libopencm3/spi_master/)                    | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |
 | [SPI (Slave mode)](./libopencm3/spi_slave/)                      | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |

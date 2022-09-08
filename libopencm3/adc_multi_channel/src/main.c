@@ -83,17 +83,6 @@ static void rcc_setup(void)
   rcc_periph_clock_enable(RCC_LED_GPIO);
 }
 
-static void led_setup(void)
-{
-  /* Set LED pin to output push-pull. */
-#if defined(STM32F1)
-  gpio_set_mode(GPIO_LED_PORT, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO_LED_PIN);
-#else
-  gpio_mode_setup(GPIO_LED_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO_LED_PIN);
-  gpio_set_output_options(GPIO_LED_PORT, GPIO_OTYPE_PP, GPIO_OSPEED_2MHZ, GPIO_LED_PIN);
-#endif
-}
-
 static void adc_setup(void)
 {
 /* Set to input analog. */
@@ -120,6 +109,17 @@ static void adc_setup(void)
 
   adc_power_on(ADC1);
   delay(800000); /* Wait a bit. */
+}
+
+static void led_setup(void)
+{
+  /* Set LED pin to output push-pull. */
+#if defined(STM32F1)
+  gpio_set_mode(GPIO_LED_PORT, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO_LED_PIN);
+#else
+  gpio_mode_setup(GPIO_LED_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO_LED_PIN);
+  gpio_set_output_options(GPIO_LED_PORT, GPIO_OTYPE_PP, GPIO_OSPEED_2MHZ, GPIO_LED_PIN);
+#endif
 }
 
 static void usart_setup(void)
