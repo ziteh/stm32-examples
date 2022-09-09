@@ -10,29 +10,27 @@
 #include <libopencm3/stm32/exti.h>
 #include <libopencm3/cm3/nvic.h>
 
-#if defined(NUCLEO_F103RB)
-  #define RCC_BUTTON_GPIO (RCC_GPIOC)
-  #define GPIO_BUTTON_PORT (GPIOC)
-  #define GPIO_BUTTON_PIN (GPIO13)
-  #define NVIC_BUTTON_IRQ (NVIC_EXTI15_10_IRQ)
-  #define EXTI_BUTTON_SOURCE (EXTI13)
-
+/* User LED (LD2) connected to Arduino-D13 pin. */
+#if defined(NUCLEO_F103RB) || \
+    defined(NUCLEO_F401RE) || \
+    defined(NUCLEO_F446RE)
   #define RCC_LED_GPIO (RCC_GPIOA)
   #define GPIO_LED_PORT (GPIOA)
-  #define GPIO_LED_PIN (GPIO5) /* D13. */
-#elif defined(NUCLEO_F446RE)
-  #define RCC_BUTTON_GPIO (RCC_GPIOC)
-  #define GPIO_BUTTON_PORT (GPIOC)
-  #define GPIO_BUTTON_PIN (GPIO13)
-  #define NVIC_BUTTON_IRQ (NVIC_EXTI15_10_IRQ)
-  #define EXTI_BUTTON_SOURCE (EXTI13)
-
-  #define RCC_LED_GPIO (RCC_GPIOA)
-  #define GPIO_LED_PORT (GPIOA)
-  #define GPIO_LED_PIN (GPIO5) /* D13. */
+  #define GPIO_LED_PIN (GPIO5)
+#elif defined(NUCLEO_F302R8)
+  #define RCC_LED_GPIO (RCC_GPIOB)
+  #define GPIO_LED_PORT (GPIOB)
+  #define GPIO_LED_PIN (GPIO13)
 #else
   #error "STM32 board not defined."
 #endif
+
+/* User button (B1) connected to PC13. */
+#define RCC_BUTTON_GPIO (RCC_GPIOC)
+#define GPIO_BUTTON_PORT (GPIOC)
+#define GPIO_BUTTON_PIN (GPIO13)
+#define EXTI_BUTTON_SOURCE (EXTI13)
+#define NVIC_BUTTON_IRQ (NVIC_EXTI15_10_IRQ)
 
 #define DELAY_VALUE_A ((uint32_t)500000)
 #define DELAY_VALUE_B ((uint32_t)200000)
@@ -51,13 +49,10 @@ static void led_setup(void)
 {
   /* Set LED pin to output push-pull. */
 #if defined(STM32F1)
-  gpio_set_mode(GPIO_LED_PORT,
-                GPIO_MODE_OUTPUT_2_MHZ,
-                GPIO_CNF_OUTPUT_PUSHPULL,
-                GPIO_LED_PIN);
+  gpio_set_mode(GPIO_LED_PORT, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO_LED_PIN);
 #else
-  gpio_mode_setup(GPIO_LED_PORT, GPIO_MODE_OUTPUT,GPIO_PUPD_NONE, GPIO_LED_PIN);
-  gpio_set_output_options(GPIO_LED_PORT,GPIO_OTYPE_PP, GPIO_OSPEED_2MHZ, GPIO_LED_PIN);
+  gpio_mode_setup(GPIO_LED_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO_LED_PIN);
+  gpio_set_output_options(GPIO_LED_PORT, GPIO_OTYPE_PP, GPIO_OSPEED_2MHZ, GPIO_LED_PIN);
 #endif
 }
 
@@ -108,6 +103,7 @@ int main(void)
 
 /**
  * @brief EXTI15~10 Interrupt service routine.
+ * @note User button pressed event.
  */
 void exti15_10_isr(void)
 {
