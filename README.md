@@ -10,7 +10,7 @@ This repo contains some basic examples for STM32.
 | [Blinking LED](./libopencm3/blink/)                              | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | [GPIO input](./libopencm3/gpio_input/)                           | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                    |
 | [EXTI button](./libopencm3/exti_button/)                         | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                    |
-| [USART with printf()](./libopencm3/usart_printf/)                | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |
+| [USART with printf()](./libopencm3/usart_printf/)                | :heavy_check_mark: | :heavy_check_mark: |                    | :heavy_check_mark: |                    |
 | [USART receive interrupt](./libopencm3/usart_receive_interrupt/) | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |
 | [Timer](./libopencm3/timer/)                                     | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |
 | [SysTick delay](./libopencm3/systick/)                           | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |
