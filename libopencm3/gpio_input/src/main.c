@@ -9,7 +9,8 @@
 #include <libopencm3/stm32/gpio.h>
 
 /* User LED (LD2) connected to Arduino-D13 pin. */
-#if defined(NUCLEO_F103RB) || \
+#if defined(NUCLEO_F103RB) || \ 
+    defined(NUCLEO_F401RE) || \
     defined(NUCLEO_F446RE)
   #define RCC_LED_GPIO (RCC_GPIOA)
   #define GPIO_LED_PORT (GPIOA)
