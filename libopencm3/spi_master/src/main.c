@@ -182,7 +182,7 @@ void usart2_isr(void)
    * Wait for SPI transmit complete.
    * Ref: https://controllerstech.com/spi-using-registers-in-stm32/.
    */
-  while (!(SPI_SR(SPI1) & (SPI_SR_TXE))) /* Wait for TXE(Transmit regitster empty) flag to set. */
+  while (!(SPI_SR(SPI1) & (SPI_SR_TXE))) /* Wait for TXE(Transmit buffer empty) flag to set. */
   {
   }
   while ((SPI_SR(SPI1) & (SPI_SR_BSY))) /* Wait for BSY(Busy) flag to reset. */

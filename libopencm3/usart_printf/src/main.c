@@ -17,12 +17,18 @@
 #if defined(NUCLEO_F103RB)
   #define RCC_USART_TX_GPIO (RCC_GPIOA)
   #define GPIO_USART_TX_PORT (GPIOA)
-  #define GPIO_USART_TX_PIN (GPIO2) /* D1. */
-#elif defined(NUCLEO_F446RE)
+  #define GPIO_USART_TX_PIN (GPIO2) /* Arduino-D1. */
+#elif defined(NUCLEO_F446RE) || \
+      defined(NUCLEO_F302R8)
   #define RCC_USART_TX_GPIO (RCC_GPIOA)
   #define GPIO_USART_TX_PORT (GPIOA)
-  #define GPIO_USART_TX_PIN (GPIO2) /* D1. */
-  #define GPIO_USART_AF (GPIO_AF7)  /* Ref: Table-11 in DS10693. */
+  #define GPIO_USART_TX_PIN (GPIO2) /* Arduino-D1. */
+
+  /*
+   * F446RE: Table-11 in DS10693.
+   * F302R8: Table-14 in DS9896.
+   */
+  #define GPIO_USART_AF (GPIO_AF7)
 #else
   #error "STM32 board not defined."
 #endif

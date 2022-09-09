@@ -8,25 +8,25 @@
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
 
-#if defined(NUCLEO_F103RB)
-  #define RCC_BUTTON_GPIO (RCC_GPIOC)
-  #define GPIO_BUTTON_PORT (GPIOC)
-  #define GPIO_BUTTON_PIN (GPIO13)
-
+/* User LED (LD2) connected to Arduino-D13 pin. */
+#if defined(NUCLEO_F103RB) || \ 
+    defined(NUCLEO_F401RE) || \
+    defined(NUCLEO_F446RE)
   #define RCC_LED_GPIO (RCC_GPIOA)
   #define GPIO_LED_PORT (GPIOA)
-  #define GPIO_LED_PIN (GPIO5) /* D13. */
-#elif defined(NUCLEO_F446RE)
-  #define RCC_BUTTON_GPIO (RCC_GPIOC)
-  #define GPIO_BUTTON_PORT (GPIOC)
-  #define GPIO_BUTTON_PIN (GPIO13)
-
-  #define RCC_LED_GPIO (RCC_GPIOA)
-  #define GPIO_LED_PORT (GPIOA)
-  #define GPIO_LED_PIN (GPIO5) /* D13. */
+  #define GPIO_LED_PIN (GPIO5)
+#elif defined(NUCLEO_F302R8)
+  #define RCC_LED_GPIO (RCC_GPIOB)
+  #define GPIO_LED_PORT (GPIOB)
+  #define GPIO_LED_PIN (GPIO13)
 #else
   #error "STM32 board not defined."
 #endif
+
+/* User button (B1) connected to PC13. */
+#define RCC_BUTTON_GPIO (RCC_GPIOC)
+#define GPIO_BUTTON_PORT (GPIOC)
+#define GPIO_BUTTON_PIN (GPIO13)
 
 int main(void)
 {
@@ -34,8 +34,9 @@ int main(void)
   rcc_periph_clock_enable(RCC_LED_GPIO);
   rcc_periph_clock_enable(RCC_BUTTON_GPIO);
 
-  /* Set LED pin to output push-pull.
-   * Set button pin to input floating.
+  /*
+   * Set LED pin to output push-pull,
+   * and set button pin to input floating.
    */
 #if defined(STM32F1)
   gpio_set_mode(GPIO_LED_PORT,
@@ -52,7 +53,6 @@ int main(void)
                   GPIO_MODE_OUTPUT,
                   GPIO_PUPD_NONE,
                   GPIO_LED_PIN);
-
   gpio_set_output_options(GPIO_LED_PORT,
                           GPIO_OTYPE_PP,
                           GPIO_OSPEED_2MHZ,
