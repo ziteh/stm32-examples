@@ -107,14 +107,17 @@ int main(void)
  */
 void exti15_10_isr(void)
 {
-  exti_reset_request(EXTI13);
+  if (exti_get_flag_status(EXTI_BUTTON_SOURCE)) /* Check EXTI line. */
+  {
+    exti_reset_request(EXTI_BUTTON_SOURCE);
 
-  if (delay_value == DELAY_VALUE_A)
-  {
-    delay_value = DELAY_VALUE_B;
-  }
-  else
-  {
-    delay_value = DELAY_VALUE_A;
+    if (delay_value == DELAY_VALUE_A)
+    {
+      delay_value = DELAY_VALUE_B;
+    }
+    else
+    {
+      delay_value = DELAY_VALUE_A;
+    }
   }
 }
