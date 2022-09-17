@@ -13,7 +13,7 @@ This repo contains some basic examples for STM32.
 | [Blinking LED](./libopencm3/blink/)                              | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | [GPIO input](./libopencm3/gpio_input/)                           | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                    |
 | [EXTI button](./libopencm3/exti_button/)                         | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                    |
-| [USART with printf()](./libopencm3/usart_printf/)                | :heavy_check_mark: | :heavy_check_mark: |                    | :heavy_check_mark: |                    |                    |
+| [USART with printf()](./libopencm3/usart_printf/)                | :heavy_check_mark: | :heavy_check_mark: |                    | :heavy_check_mark: | :heavy_check_mark: |                    |
 | [USART receive interrupt](./libopencm3/usart_receive_interrupt/) | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
 | [Timer](./libopencm3/timer/)                                     | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
 | [SysTick delay](./libopencm3/systick/)                           | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
@@ -68,9 +68,13 @@ git submodule update --init --recursive
 - [STM32F446RE](https://www.st.com/en/microcontrollers-microprocessors/stm32f446re.html)
   - Datasheet: [DS10693](https://www.st.com/resource/en/datasheet/stm32f446re.pdf)
   - Reference Manual: [RM0390](https://www.st.com/resource/en/reference_manual/rm0390-stm32f446xx-advanced-armbased-32bit-mcus-stmicroelectronics.pdf)
+- [STM32L432KC](https://www.st.com/en/microcontrollers-microprocessors/stm32l432kc.html)
+  - Datasheet: [DS11451](https://www.st.com/resource/en/datasheet/stm32l432kc.pdf)
+  - Reference Manual: [RM0394](https://www.st.com/resource/en/reference_manual/rm0394-stm32l41xxx42xxx43xxx44xxx45xxx46xxx-advanced-armbased-32bit-mcus-stmicroelectronics.pdf)
 - [STM32G431KB](https://www.st.com/en/microcontrollers-microprocessors/stm32g431kb.html)
   - Datasheet: [DS12589](https://www.st.com/resource/en/datasheet/stm32g431kb.pdf)
   - Reference Manual: [RM0440](https://www.st.com/resource/en/reference_manual/rm0440-stm32g4-series-advanced-armbased-32bit-mcus-stmicroelectronics.pdf)
 - STM32 Nucleo board user manual
   - Nucleo-64 MB1136: [UM1724](https://www.st.com/resource/en/user_manual/um1724-stm32-nucleo64-boards-mb1136-stmicroelectronics.pdf)
+  - Nucleo-32 MB1180: [UM1956](https://www.st.com/resource/en/user_manual/um1956-stm32-nucleo32-boards-mb1180-stmicroelectronics.pdf)
   - Nucleo-32 MB1430: [UM2397](https://www.st.com/resource/en/user_manual/um2397-stm32g4-nucleo32-board-mb1430-stmicroelectronics.pdf)
