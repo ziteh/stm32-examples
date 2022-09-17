@@ -1,15 +1,18 @@
 # STM32 Examples
+
 This repo contains some basic examples for STM32.
 
 ## List
+
 ### LibOpenCM3
+
 [LibOpenCM3](https://github.com/libopencm3/libopencm3) is an open source ARM Cortex-M microcontroller library.
 
 | examples \ boards                                                |   Nucleo-F103RB    |   Nucleo-F446RE    |   Nucleo-F401RE    |   Nucleo-F302R8    |   Nucleo-L432KC    |   Nucleo-G431KB    |
 | :--------------------------------------------------------------- | :----------------: | :----------------: | :----------------: | :----------------: | :----------------: | :----------------: |
 | [Blinking LED](./libopencm3/blink/)                              | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| [GPIO input](./libopencm3/gpio_input/)                           | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                    |                    |
-| [EXTI button](./libopencm3/exti_button/)                         | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                    |                    |
+| [GPIO input](./libopencm3/gpio_input/)                           | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                    |
+| [EXTI button](./libopencm3/exti_button/)                         | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                    |
 | [USART with printf()](./libopencm3/usart_printf/)                | :heavy_check_mark: | :heavy_check_mark: |                    | :heavy_check_mark: |                    |                    |
 | [USART receive interrupt](./libopencm3/usart_receive_interrupt/) | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
 | [Timer](./libopencm3/timer/)                                     | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
@@ -24,31 +27,41 @@ This repo contains some basic examples for STM32.
 
 ### STM32 HAL
 
+STM32Cube Hardware Abstraction Layer.
+
 | examples \ boards                  | Nucleo-F103RB | Nucleo-F446RE |   Nucleo-G431KB    |
 | :--------------------------------- | :-----------: | :-----------: | :----------------: |
 | [Blinking LED](./stm32_hal/blink/) |               |               | :heavy_check_mark: |
 
 ## Usage
+
 1. Install [VSCode](https://code.visualstudio.com) and [PlatformIO IDE](https://marketplace.visualstudio.com/items?itemName=platformio.platformio-ide).
 2. Clone this repo (some examples contain submodules):
+
 ```git
 git clone --recurse-submodules https://github.com/ziteh/stm32-examples.git
 ```
+
 or
+
 ```git
 git clone https://github.com/ziteh/stm32-examples.git
 git submodule update --init --recursive
 ```
+
 3. Open example project folder (e.g. [blink example](./libopencm3/blink/)) in VSCode.
 4. Selecte environment (STM32 board). [Ref](https://docs.platformio.org/en/stable/integration/ide/vscode.html#task-explorer)
 5. Build project and upload to STM32 board. [Ref](https://docs.platformio.org/en/stable/integration/ide/vscode.html)
 
 ## References
+
 ### Code
+
 - [libopencm3/libopencm3-examples](https://github.com/libopencm3/libopencm3-examples)
 - [platformio/platform-ststm32](https://github.com/platformio/platform-ststm32)
 
 ### STM32 Documentation
+
 - [STM32F103RB](https://www.st.com/en/microcontrollers-microprocessors/stm32f103rb.html)
   - Datasheet: [DS5319](https://www.st.com/resource/en/datasheet/stm32f103rb.pdf)
   - Reference Manual: [RM0008](https://www.st.com/resource/en/reference_manual/rm0008-stm32f101xx-stm32f102xx-stm32f103xx-stm32f105xx-and-stm32f107xx-advanced-armbased-32bit-mcus-stmicroelectronics.pdf)
