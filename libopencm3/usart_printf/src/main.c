@@ -19,14 +19,16 @@
   #define GPIO_USART_TX_PORT (GPIOA)
   #define GPIO_USART_TX_PIN (GPIO2) /* Arduino-D1. */
 #elif defined(NUCLEO_F446RE) || \
-      defined(NUCLEO_F302R8)
+      defined(NUCLEO_F302R8) || \
+      defined(NUCLEO_L432KC)
   #define RCC_USART_TX_GPIO (RCC_GPIOA)
   #define GPIO_USART_TX_PORT (GPIOA)
-  #define GPIO_USART_TX_PIN (GPIO2) /* Arduino-D1. */
+  #define GPIO_USART_TX_PIN (GPIO2) /* Arduino-D1(MB1136) or A7(MB1180). */
 
   /*
    * F446RE: Table-11 in DS10693.
    * F302R8: Table-14 in DS9896.
+   * L432KC: Table-15 in DS11451.
    */
   #define GPIO_USART_AF (GPIO_AF7)
 #else
