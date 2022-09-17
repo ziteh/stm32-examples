@@ -66,7 +66,7 @@ static void usart_setup(void)
               GPIO_USART_TX_PIN);
 #endif
 
-  /* Congif USART params. */
+  /* Config USART params. */
   usart_set_baudrate(USART2, USART_BAUDRATE);
   usart_set_databits(USART2, 8);
   usart_set_stopbits(USART2, USART_STOPBITS_1);
