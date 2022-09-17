@@ -8,7 +8,7 @@
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
 
-/* User LED (LD2) connected to Arduino-D13 pin. */
+/* User LED connected to Arduino-D13 pin. */
 #if defined(NUCLEO_F103RB) || \ 
     defined(NUCLEO_F401RE) || \
     defined(NUCLEO_F446RE)
@@ -19,14 +19,24 @@
   #define RCC_LED_GPIO (RCC_GPIOB)
   #define GPIO_LED_PORT (GPIOB)
   #define GPIO_LED_PIN (GPIO13)
+#elif defined(NUCLEO_L432KC)
+  #define RCC_LED_GPIO (RCC_GPIOB)
+  #define GPIO_LED_PORT (GPIOB)
+  #define GPIO_LED_PIN (GPIO3)
 #else
   #error "STM32 board not defined."
 #endif
 
-/* User button (B1) connected to PC13. */
-#define RCC_BUTTON_GPIO (RCC_GPIOC)
-#define GPIO_BUTTON_PORT (GPIOC)
-#define GPIO_BUTTON_PIN (GPIO13)
+/* User button. */
+#if defined(NUCLEO_L432KC)
+  #define RCC_BUTTON_GPIO (RCC_GPIOA)
+  #define GPIO_BUTTON_PORT (GPIOA)
+  #define GPIO_BUTTON_PIN (GPIO12)
+#else
+  #define RCC_BUTTON_GPIO (RCC_GPIOC)
+  #define GPIO_BUTTON_PORT (GPIOC)
+  #define GPIO_BUTTON_PIN (GPIO13)
+#endif
 
 int main(void)
 {
