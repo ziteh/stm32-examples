@@ -73,6 +73,12 @@ static void adc_setup(void)
 
   adc_power_on(ADC1);
   delay(800000); /* Wait a bit. */
+
+#if defined(STM32F1)
+  /* Self-calibration. */
+  adc_reset_calibration(ADC1);
+  adc_calibrate(ADC1);
+#endif
 }
 
 static void rcc_setup(void)
