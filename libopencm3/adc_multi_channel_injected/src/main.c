@@ -1,6 +1,6 @@
 /**
  * @file   main.c
- * @brief  Multi channel ADC example for LibOpenCM3 with STM32.
+ * @brief  ADC injected multi channel example for LibOpenCM3 with STM32.
  * @author ZiTe (honmonoh@gmail.com)
  * @copyright MIT License
  */
@@ -10,62 +10,34 @@
 int main(void)
 {
   rcc_setup();
-  led_setup();
   adc_setup();
   usart_setup();
-
-  uint8_t channel = 0;
 
   printf("ADC Ready\r\n");
 
   while (1)
   {
-    uint16_t adc_value = get_adc_value(channel);
-    printf("CH%d: %4d ", channel, adc_value);
+    /* Software start ADC injected conversion. */
+    adc_start_conversion_injected(ADC1);
 
-    switch (channel)
+    /* Wait for ADC injected end of conversion. */
+    while (!adc_eoc_injected(ADC1))
     {
-    case 0:
-      channel = 1;
-      break;
-
-    case 1:
-      channel = 4;
-      break;
-
-    default:
-      channel = 0;
-      printf("\r\n");
-      break;
     }
 
-    gpio_toggle(GPIO_LED_PORT, GPIO_LED_PIN); /* LED on/off. */
-    delay(100000);
+    /* Clear ADC injected end of conversion flag. */
+    ADC_SR(ADC1) &= ~ADC_SR_JEOC;
+
+    /* Read ADC injected. */
+    uint16_t value1 = adc_read_injected(ADC1, 1);
+    uint16_t value2 = adc_read_injected(ADC1, 2);
+    uint16_t value3 = adc_read_injected(ADC1, 3);
+
+    printf("%4d, %4d, %4d\r\n", value1, value2, value3);
+    delay(5000000);
   }
 
   return 0;
-}
-
-static uint16_t get_adc_value(int channel)
-{
-  /* Setup channel. */
-  uint8_t adc_channel[16];
-  adc_channel[0] = channel;
-  adc_set_regular_sequence(ADC1, 1, adc_channel);
-
-  /* Software start conversion. */
-#if defined(STM32F1)
-  adc_start_conversion_direct(ADC1);
-#else
-  adc_start_conversion_regular(ADC1);
-#endif
-
-  /* Wait for ADC end of conversion. */
-  while (!adc_eoc(ADC1))
-  {
-  }
-
-  return adc_read_regular(ADC1); /* Read ADC value. */
 }
 
 static void rcc_setup(void)
@@ -73,14 +45,13 @@ static void rcc_setup(void)
 #if defined(STM32F1)
   rcc_clock_setup_in_hse_8mhz_out_72mhz();
 #elif defined(STM32F4)
-  rcc_clock_setup_pll(&rcc_hse_8mhz_3v3[RCC_CLOCK_3V3_168MHZ]);
+  rcc_clock_setup_pll(&rcc_hse_8mhz_3v3[RCC_CLOCK_3V3_84MHZ]);
 #endif
 
   rcc_periph_clock_enable(RCC_USART_TX_GPIO);
   rcc_periph_clock_enable(RCC_USART2);
   rcc_periph_clock_enable(RCC_ADC_GPIO);
   rcc_periph_clock_enable(RCC_ADC1);
-  rcc_periph_clock_enable(RCC_LED_GPIO);
 }
 
 static void adc_setup(void)
@@ -90,35 +61,47 @@ static void adc_setup(void)
   gpio_set_mode(GPIO_ADC_PORT,
                 GPIO_MODE_INPUT,
                 GPIO_CNF_INPUT_ANALOG,
-                GPIO_ADC_A0_PIN | GPIO_ADC_A1_PIN | GPIO_ADC_A2_PIN);
+                GPIO_ADC_IN0_PIN | GPIO_ADC_IN1_PIN | GPIO_ADC_IN4_PIN);
 #else
   gpio_mode_setup(GPIO_ADC_PORT,
                   GPIO_MODE_ANALOG,
                   GPIO_PUPD_NONE,
-                  GPIO_ADC_A0_PIN | GPIO_ADC_A1_PIN | GPIO_ADC_A2_PIN);
+                  GPIO_ADC_IN0_PIN | GPIO_ADC_IN1_PIN | GPIO_ADC_IN4_PIN);
 #endif
 
   /* Setup ADC. */
   adc_power_off(ADC1);
 
-  adc_disable_scan_mode(ADC1);
-  adc_disable_external_trigger_regular(ADC1);
+  adc_enable_scan_mode(ADC1);
   adc_set_single_conversion_mode(ADC1);
+  adc_disable_discontinuous_mode_regular(ADC1);
+  adc_disable_discontinuous_mode_injected(ADC1);
+
+  /* We want to start the injected conversion in sofrware. */
+#if defined(STM32F1)
+  adc_enable_external_trigger_injected(ADC1,
+                                       ADC_CR2_JSWSTART);
+#else
+  adc_enable_external_trigger_injected(ADC1,
+                                       ADC_CR2_JSWSTART,
+                                       ADC_CR2_JEXTEN_DISABLED);
+#endif
+
   adc_set_right_aligned(ADC1);
   adc_set_sample_time_on_all_channels(ADC1, ADC_SIMPLE_TIME);
 
+  uint8_t channels[4];
+  channels[0] = 0;
+  channels[1] = 1;
+  channels[2] = 4;
+  adc_set_injected_sequence(ADC1, 3, channels);
+
   adc_power_on(ADC1);
   delay(800000); /* Wait a bit. */
-}
 
-static void led_setup(void)
-{
-  /* Set LED pin to output push-pull. */
 #if defined(STM32F1)
-  gpio_set_mode(GPIO_LED_PORT, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO_LED_PIN);
-#else
-  gpio_mode_setup(GPIO_LED_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO_LED_PIN);
-  gpio_set_output_options(GPIO_LED_PORT, GPIO_OTYPE_PP, GPIO_OSPEED_2MHZ, GPIO_LED_PIN);
+  adc_reset_calibration(ADC1);
+  adc_calibrate(ADC1);
 #endif
 }
 
@@ -154,6 +137,7 @@ static void delay(uint32_t value)
   }
 }
 
+/* For printf(). */
 int _write(int file, char *ptr, int len)
 {
   int i;
