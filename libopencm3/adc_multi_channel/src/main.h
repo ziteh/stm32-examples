@@ -23,6 +23,8 @@ extern "C"
 #define USART_BAUDRATE (9600)
 
 #if defined(NUCLEO_F103RB)
+  #error "Not working, need to fix." /* TODO. */
+
   #define ADC_SIMPLE_TIME (ADC_SMPR_SMP_55DOT5CYC)
   #define RCC_ADC_GPIO (RCC_GPIOA)
   #define GPIO_ADC_PORT (GPIOA)
