@@ -20,8 +20,9 @@ This repo contains some basic examples for STM32.
 | [PWM](./libopencm3/pwm/)                                                 | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
 | [IWDG](./libopencm3/iwdg/)                                               | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
 | [WWDG](./libopencm3/wwdg/)                                               | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
-| [ADC (Regular single channel)](./libopencm3/adc_single_channel_regular/)                 | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
+| [ADC (Regular single channel)](./libopencm3/adc_single_channel_regular/) | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
 | [ADC (Injected multi channel)](./libopencm3/adc_multi_channel_injected/) |        :x:         | :heavy_check_mark: |                    |                    |                    |                    |
+| [ADC (Interrupt)](./libopencm3/adc_interrupt/)                           | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
 | [SPI (Master mode)](./libopencm3/spi_master/)                            | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
 | [SPI (Slave mode)](./libopencm3/spi_slave/)                              | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
 | [I2C (LCD 1602)](./libopencm3/i2c_lcd1602/)                              | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
