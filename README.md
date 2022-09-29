@@ -8,25 +8,25 @@ This repo contains some basic examples for STM32.
 
 [LibOpenCM3](https://github.com/libopencm3/libopencm3) is an open source ARM Cortex-M microcontroller library.
 
-| examples \ boards                                                             |   Nucleo-F103RB    |   Nucleo-F446RE    |   Nucleo-F401RE    |   Nucleo-F302R8    |   Nucleo-L432KC    |   Nucleo-G431KB    |
-| :---------------------------------------------------------------------------- | :----------------: | :----------------: | :----------------: | :----------------: | :----------------: | :----------------: |
-| [Blinking LED](./libopencm3/blink/)                                           | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| [GPIO input](./libopencm3/gpio_input/)                                        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                    |
-| [EXTI button](./libopencm3/exti_button/)                                      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                    |
-| [USART with printf()](./libopencm3/usart_printf/)                             | :heavy_check_mark: | :heavy_check_mark: |                    | :heavy_check_mark: | :heavy_check_mark: |                    |
-| [USART receive interrupt](./libopencm3/usart_receive_interrupt/)              | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
-| [Timer](./libopencm3/timer/)                                                  | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
-| [SysTick delay](./libopencm3/systick/)                                        | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
-| [PWM](./libopencm3/pwm/)                                                      | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
-| [IWDG](./libopencm3/iwdg/)                                                    | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
-| [WWDG](./libopencm3/wwdg/)                                                    | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
-| [ADC (Regular single channel)](./libopencm3/adc_single_channel_regular/)      | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
-| [ADC (Injected multi channel)](./libopencm3/adc_multi_channel_injected/)      |        :x:         | :heavy_check_mark: |                    |                    |                    |                    |
-| [ADC (Interrupt)](./libopencm3/adc_interrupt/)                                | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
-| [ADC (External trigger with timer)](./libopencm3/adc_external_trigger_timer/) | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
-| [SPI (Master mode)](./libopencm3/spi_master/)                                 | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
-| [SPI (Slave mode)](./libopencm3/spi_slave/)                                   | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
-| [I2C (LCD 1602)](./libopencm3/i2c_lcd1602/)                                   | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
+| examples \ boards                                                           |   Nucleo-F103RB    |   Nucleo-F446RE    |   Nucleo-F401RE    |   Nucleo-F302R8    |   Nucleo-L432KC    |   Nucleo-G431KB    |
+| :-------------------------------------------------------------------------- | :----------------: | :----------------: | :----------------: | :----------------: | :----------------: | :----------------: |
+| [Blinking LED](./libopencm3/blink/)                                         | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| [GPIO input](./libopencm3/gpio_input/)                                      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                    |
+| [EXTI button](./libopencm3/exti_button/)                                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                    |
+| [USART with printf()](./libopencm3/usart_printf/)                           | :heavy_check_mark: | :heavy_check_mark: |                    | :heavy_check_mark: | :heavy_check_mark: |                    |
+| [USART receive interrupt](./libopencm3/usart_receive_interrupt/)            | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
+| [Timer](./libopencm3/timer/)                                                | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
+| [SysTick delay](./libopencm3/systick/)                                      | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
+| [PWM](./libopencm3/pwm/)                                                    | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
+| [IWDG](./libopencm3/iwdg/)                                                  | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
+| [WWDG](./libopencm3/wwdg/)                                                  | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
+| [ADC (Regular single channel)](./libopencm3/adc_single_channel_regular/)    | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
+| [ADC (Injected multi channel)](./libopencm3/adc_multi_channel_injected/)    |        :x:         | :heavy_check_mark: |                    |                    |                    |                    |
+| [ADC (Interrupt)](./libopencm3/adc_interrupt/)                              | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
+| [ADC (External trigger by timer)](./libopencm3/adc_external_trigger_timer/) | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
+| [SPI (Master mode)](./libopencm3/spi_master/)                               | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
+| [SPI (Slave mode)](./libopencm3/spi_slave/)                                 | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
+| [I2C (LCD 1602)](./libopencm3/i2c_lcd1602/)                                 | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
 
 ### STM32 HAL
 
