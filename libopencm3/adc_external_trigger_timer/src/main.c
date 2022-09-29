@@ -1,6 +1,6 @@
 /**
  * @file   main.c
- * @brief  ADC external trigger (Timer) example for LibOpenCM3 with STM32.
+ * @brief  ADC external trigger by timer example for LibOpenCM3 with STM32.
  * @author ZiTe (honmonoh@gmail.com)
  * @copyright MIT License
  */
@@ -14,7 +14,7 @@ int main(void)
   adc_setup();
   timer_setup();
 
-  printf("ADC External Trigger with timer.\r\n");
+  printf("ADC External Trigger by Timer.\r\n");
 
   /* Halt. */
   while (1)
