@@ -3,9 +3,9 @@
 ## USART Command
 - Write
   - command: `0x00 <address_1> <address_2> <data>`.
-  - return: `0xF0`.
+  - return: `0xF0` as ACK.
 - Read
-  - Command: `0x01 <address_1> <address_2>`.
+  - command: `0x01 <address_1> <address_2>`.
   - return: `<data>` 
 
 For example:
