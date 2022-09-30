@@ -27,6 +27,7 @@ This repo contains some basic examples for STM32.
 | [SPI (Master mode)](./libopencm3/spi_master/)                               | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
 | [SPI (Slave mode)](./libopencm3/spi_slave/)                                 | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
 | [I2C (LCD 1602)](./libopencm3/i2c_lcd1602/)                                 | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
+| [I2C (EEPROM 24C256)](./libopencm3/i2c_eeprom_24c256/)                      | :heavy_check_mark: | :heavy_check_mark: |                    |                    |                    |                    |
 
 ### STM32 HAL
 
