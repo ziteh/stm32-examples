@@ -23,12 +23,11 @@ extern "C"
 #define USART_BAUDRATE (9600)
 
 #if defined(NUCLEO_F103RB)
-  #define GPIO_SPI_SCK_MISO_MOSI_PORT (GPIOA)
+  #define GPIO_SPI_PORT (GPIOA)
   #define GPIO_SPI_SCK_PIN (GPIO5)  /* D13. */
   #define GPIO_SPI_MISO_PIN (GPIO6) /* D12. */
   #define GPIO_SPI_MOSI_PIN (GPIO7) /* D11. */
-  #define GPIO_SPI_CS_PORT (GPIOB)
-  #define GPIO_SPI_CS_PIN (GPIO6) /* D10. */
+  #define GPIO_SPI_CS_PIN (GPIO4)   /* A2. */
   #define EXTI_SPI_CS (EXTI6)
   #define NVIC_SPI_CS_IRQ (NVIC_EXTI9_5_IRQ)
 
@@ -40,22 +39,19 @@ extern "C"
   #define GPIO_USART_TX_PIN (GPIO2) /* D1. */
   #define GPIO_USART_RX_PIN (GPIO3) /* D0. */
 #elif defined(NUCLEO_F446RE)
-  #define GPIO_SPI_SCK_MISO_MOSI_PORT (GPIOA)
+  #define GPIO_SPI_PORT (GPIOA)
   #define GPIO_SPI_SCK_PIN (GPIO5)  /* D13. */
   #define GPIO_SPI_MISO_PIN (GPIO6) /* D12. */
   #define GPIO_SPI_MOSI_PIN (GPIO7) /* D11. */
-  #define GPIO_SPI_CS_PORT (GPIOB)
-  #define GPIO_SPI_CS_PIN (GPIO6) /* D10. */
-  #define EXTI_SPI_CS (EXTI6)
-  #define NVIC_SPI_CS_IRQ (NVIC_EXTI9_5_IRQ)
-  #define GPIO_SPI_AF (GPIO_AF5) /* Ref: Table-11 in DS10693. */
+  #define GPIO_SPI_CS_PIN (GPIO4)   /* A2. */
+  #define GPIO_SPI_AF (GPIO_AF5)    /* Ref: Table-11 in DS10693. */
 
   #define GPIO_SPI_RQ_PORT (GPIOC)
   #define GPIO_SPI_RQ_PIN (GPIO7) /* D9. */
 
   #define GPIO_USART_TXRX_PORT (GPIOA)
-  #define GPIO_USART_TX_PIN (GPIO2) /* D1. */
-  #define GPIO_USART_RX_PIN (GPIO3) /* D0. */
+  #define GPIO_USART_TX_PIN (GPIO2) /* ST-Link (D1). */
+  #define GPIO_USART_RX_PIN (GPIO3) /* ST-Link (D0). */
   #define GPIO_USART_AF (GPIO_AF7)  /* Ref: Table-11 in DS10693. */
 #else
   #error "STM32 board not defined."

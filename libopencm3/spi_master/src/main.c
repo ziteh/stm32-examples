@@ -34,12 +34,12 @@ int main(void)
 
 static void spi_select(void)
 {
-  gpio_clear(GPIO_SPI_CS_PORT, GPIO_SPI_CS_PIN);
+  gpio_clear(GPIO_SPI_PORT, GPIO_SPI_CS_PIN);
 }
 
 static void spi_deselect(void)
 {
-  gpio_set(GPIO_SPI_CS_PORT, GPIO_SPI_CS_PIN);
+  gpio_set(GPIO_SPI_PORT, GPIO_SPI_CS_PIN);
 }
 
 static void rcc_setup(void)
@@ -53,7 +53,6 @@ static void rcc_setup(void)
 #endif
 
   rcc_periph_clock_enable(RCC_GPIOA);
-  rcc_periph_clock_enable(RCC_GPIOB);
   rcc_periph_clock_enable(RCC_GPIOC);
   rcc_periph_clock_enable(RCC_USART2);
   rcc_periph_clock_enable(RCC_SPI1);
@@ -63,36 +62,36 @@ static void spi_setup(void)
 {
   /*
    * Set SPI-SCK & MISO & MOSI pin to alternate function.
-   * Set SPI-CS pin to output push-pull (control CS by manual instead of AF).
+   * Set SPI-CS pin to output push-pull (control CS by manual).
    */
 #if defined(STM32F1)
-  gpio_set_mode(GPIO_SPI_SCK_MISO_MOSI_PORT,
+  gpio_set_mode(GPIO_SPI_PORT,
                 GPIO_MODE_OUTPUT_50_MHZ,
                 GPIO_CNF_OUTPUT_ALTFN_PUSHPULL,
                 GPIO_SPI_SCK_PIN | GPIO_SPI_MISO_PIN | GPIO_SPI_MOSI_PIN);
 
-  gpio_set_mode(GPIO_SPI_CS_PORT,
+  gpio_set_mode(GPIO_SPI_PORT,
                 GPIO_MODE_OUTPUT_10_MHZ,
                 GPIO_CNF_OUTPUT_PUSHPULL,
                 GPIO_SPI_CS_PIN);
 #else
-  gpio_mode_setup(GPIO_SPI_SCK_MISO_MOSI_PORT,
+  gpio_mode_setup(GPIO_SPI_PORT,
                   GPIO_MODE_AF,
                   GPIO_PUPD_NONE,
                   GPIO_SPI_SCK_PIN | GPIO_SPI_MISO_PIN | GPIO_SPI_MOSI_PIN);
 
-  gpio_set_output_options(GPIO_SPI_SCK_MISO_MOSI_PORT,
+  gpio_set_output_options(GPIO_SPI_PORT,
                           GPIO_OTYPE_PP,
                           GPIO_OSPEED_50MHZ,
-                          GPIO_SPI_SCK_PIN | GPIO_SPI_MISO_PIN | GPIO_SPI_MOSI_PIN);
+                          GPIO_SPI_SCK_PIN | GPIO_SPI_MOSI_PIN);
 
-  gpio_set_af(GPIO_SPI_SCK_MISO_MOSI_PORT,
+  gpio_set_af(GPIO_SPI_PORT,
               GPIO_SPI_AF,
               GPIO_SPI_SCK_PIN | GPIO_SPI_MISO_PIN | GPIO_SPI_MOSI_PIN);
 
-  /* Control CS by manual instead of AF. */
-  gpio_mode_setup(GPIO_SPI_CS_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO_SPI_CS_PIN);
-  gpio_set_output_options(GPIO_SPI_CS_PORT, GPIO_OTYPE_PP, GPIO_OSPEED_25MHZ, GPIO_SPI_CS_PIN);
+  /* In master mode, control CS by user instead of AF. */
+  gpio_mode_setup(GPIO_SPI_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO_SPI_CS_PIN);
+  gpio_set_output_options(GPIO_SPI_PORT, GPIO_OTYPE_PP, GPIO_OSPEED_25MHZ, GPIO_SPI_CS_PIN);
 #endif
 
   spi_disable(SPI1);
@@ -101,15 +100,19 @@ static void spi_setup(void)
   /* Set up in master mode. */
   spi_init_master(SPI1,
                   SPI_CR1_BAUDRATE_FPCLK_DIV_64,   /* Clock baudrate. */
-                  SPI_CR1_CPOL_CLK_TO_0_WHEN_IDLE, /* Set clock to low when idle. */
-                  SPI_CR1_CPHA_CLK_TRANSITION_2,   /* Data is sampled on the 2nd edge. */
+                  SPI_CR1_CPOL_CLK_TO_0_WHEN_IDLE, /* CPOL = 0. */
+                  SPI_CR1_CPHA_CLK_TRANSITION_2,   /* CPHA = 1. */
                   SPI_CR1_DFF_8BIT,                /* Data frame format. */
                   SPI_CR1_MSBFIRST);               /* Data frame bit order. */
   spi_set_full_duplex_mode(SPI1);
 
-  /* Set to hardware NSS management and enable NSS output. */
-  spi_disable_software_slave_management(SPI1); /* SSM = 0. */
-  spi_enable_ss_output(SPI1);                  /* SSOE = 1. */
+  /*
+   * CS pin is not used on master side at standard multi-slave config.
+   * It has to be managed internally (SSM=1, SSI=1)
+   * to prevent any MODF error.
+   */
+  spi_enable_software_slave_management(SPI1); /* SSM = 1. */
+  spi_set_nss_high(SPI1);                     /* SSI = 1. */
 
   spi_deselect();
   spi_enable(SPI1);
@@ -184,16 +187,16 @@ void usart2_isr(void)
    * Wait for SPI transmit complete.
    * Ref: https://controllerstech.com/spi-using-registers-in-stm32/.
    */
-  while (!(SPI_SR(SPI1) & SPI_SR_TXE)) /* Wait for TXE(Transmit buffer empty) flag to set. */
+  while (!(SPI_SR(SPI1) & SPI_SR_TXE)) /* Wait for 'Transmit buffer empty' flag to set. */
   {
   }
-  while ((SPI_SR(SPI1) & SPI_SR_BSY)) /* Wait for BSY(Busy) flag to reset. */
+  while ((SPI_SR(SPI1) & SPI_SR_BSY)) /* Wait for 'Busy' flag to reset. */
   {
   }
 
   spi_deselect();
 
-  /* Clear RXNE(Read data register not empty) flag at SR(Status register). */
+  /* Clear 'Read data register not empty' flag. */
   USART_SR(USART2) &= ~USART_SR_RXNE;
 }
 
@@ -205,14 +208,13 @@ void exti9_5_isr(void)
   exti_reset_request(EXTI_SPI_RQ);
 
   spi_select();
-  while ((SPI_SR(SPI1) & SPI_SR_BSY)) /* Wait for BSY(Busy) flag to reset. */
+  spi_send(SPI1, 0x00);               /* Just for beget clock signal. */
+  while ((SPI_SR(SPI1) & SPI_SR_BSY)) /* Wait for 'Busy' flag to reset. */
   {
   }
-
-  spi_send(SPI1, 0x00); /* Just for beget clock signal. */
   uint8_t indata = spi_read(SPI1);
 
-  while ((SPI_SR(SPI1) & SPI_SR_BSY)) /* Wait for BSY(Busy) flag to reset. */
+  while ((SPI_SR(SPI1) & SPI_SR_BSY)) /* Wait for 'Busy' flag to reset. */
   {
   }
   spi_deselect();
