@@ -35,10 +35,8 @@ static void rcc_setup(void)
 {
 #if defined(NUCLEO_F103RB)
   rcc_clock_setup_in_hse_8mhz_out_72mhz();
-  rcc_periph_clock_enable(RCC_AFIO); /* For EXTI. */
 #elif defined(NUCLEO_F446RE)
   rcc_clock_setup_pll(&rcc_hse_8mhz_3v3[RCC_CLOCK_3V3_168MHZ]);
-  rcc_periph_clock_enable(RCC_SYSCFG); /* For EXTI. */
 #endif
 
   rcc_periph_clock_enable(RCC_GPIOA);

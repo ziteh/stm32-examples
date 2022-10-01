@@ -17,7 +17,6 @@ extern "C"
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/spi.h>
 #include <libopencm3/stm32/usart.h>
-#include <libopencm3/stm32/exti.h>
 #include <libopencm3/cm3/nvic.h>
 
 #define USART_BAUDRATE (9600)
@@ -28,8 +27,6 @@ extern "C"
   #define GPIO_SPI_MISO_PIN (GPIO6) /* D12. */
   #define GPIO_SPI_MOSI_PIN (GPIO7) /* D11. */
   #define GPIO_SPI_CS_PIN (GPIO4)   /* A2. */
-  #define EXTI_SPI_CS (EXTI6)
-  #define NVIC_SPI_CS_IRQ (NVIC_EXTI9_5_IRQ)
 
   #define GPIO_SPI_RQ_PORT (GPIOC)
   #define GPIO_SPI_RQ_PIN (GPIO7) /* D9. */
