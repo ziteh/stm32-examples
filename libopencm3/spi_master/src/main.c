@@ -63,7 +63,7 @@ static void spi_setup(void)
 {
   /*
    * Set SPI-SCK & MISO & MOSI pin to alternate function.
-   * Set SPI-CS pin to output open-drain (control CS by manual instead of AF).
+   * Set SPI-CS pin to output push-pull (control CS by manual instead of AF).
    */
 #if defined(STM32F1)
   gpio_set_mode(GPIO_SPI_SCK_MISO_MOSI_PORT,
@@ -73,7 +73,7 @@ static void spi_setup(void)
 
   gpio_set_mode(GPIO_SPI_CS_PORT,
                 GPIO_MODE_OUTPUT_10_MHZ,
-                GPIO_CNF_OUTPUT_OPENDRAIN,
+                GPIO_CNF_OUTPUT_PUSHPULL,
                 GPIO_SPI_CS_PIN);
 #else
   gpio_mode_setup(GPIO_SPI_SCK_MISO_MOSI_PORT,
@@ -90,10 +90,12 @@ static void spi_setup(void)
               GPIO_SPI_AF,
               GPIO_SPI_SCK_PIN | GPIO_SPI_MISO_PIN | GPIO_SPI_MOSI_PIN);
 
+  /* Control CS by manual instead of AF. */
   gpio_mode_setup(GPIO_SPI_CS_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO_SPI_CS_PIN);
-  gpio_set_output_options(GPIO_SPI_CS_PORT, GPIO_OTYPE_OD, GPIO_OSPEED_25MHZ, GPIO_SPI_CS_PIN);
+  gpio_set_output_options(GPIO_SPI_CS_PORT, GPIO_OTYPE_PP, GPIO_OSPEED_25MHZ, GPIO_SPI_CS_PIN);
 #endif
 
+  spi_disable(SPI1);
   spi_reset(SPI1);
 
   /* Set up in master mode. */
@@ -105,28 +107,28 @@ static void spi_setup(void)
                   SPI_CR1_MSBFIRST);               /* Data frame bit order. */
   spi_set_full_duplex_mode(SPI1);
 
-  /* Control CS by manual instead of AF. */
-  spi_disable_software_slave_management(SPI1);
-  spi_deselect();
+  /* Set to hardware NSS management and enable NSS output. */
+  spi_disable_software_slave_management(SPI1); /* SSM = 0. */
+  spi_enable_ss_output(SPI1);                  /* SSOE = 1. */
 
+  spi_deselect();
   spi_enable(SPI1);
 }
 
 static void spi_rq_setup(void)
 {
-  /* Set RQ pin to input pull-up. */
+  /* Set RQ pin to input floating. */
 #if defined(STM32F1)
-  gpio_set_mode(GPIO_SPI_RQ_PORT, GPIO_MODE_INPUT, GPIO_CNF_INPUT_PULL_UPDOWN, GPIO_SPI_RQ_PIN);
-  GPIO_ODR(GPIO_SPI_RQ_PORT) |= GPIO_SPI_RQ_PIN; /* Set to pull-up */
+  gpio_set_mode(GPIO_SPI_RQ_PORT, GPIO_MODE_INPUT, GPIO_CNF_INPUT_FLOAT, GPIO_SPI_RQ_PIN);
 #else
-  gpio_mode_setup(GPIO_SPI_RQ_PORT, GPIO_MODE_INPUT, GPIO_PUPD_PULLUP, GPIO_SPI_RQ_PIN);
+  gpio_mode_setup(GPIO_SPI_RQ_PORT, GPIO_MODE_INPUT, GPIO_PUPD_NONE, GPIO_SPI_RQ_PIN);
 #endif
 
   /* Setup interrupt. */
-  nvic_enable_irq(NVIC_SPI_RQ_IRQ);
   exti_select_source(EXTI_SPI_RQ, GPIO_SPI_RQ_PORT);
   exti_set_trigger(EXTI_SPI_RQ, EXTI_TRIGGER_FALLING);
   exti_enable_request(EXTI_SPI_RQ);
+  nvic_enable_irq(NVIC_SPI_RQ_IRQ);
 }
 
 static void usart_setup(void)
@@ -182,10 +184,10 @@ void usart2_isr(void)
    * Wait for SPI transmit complete.
    * Ref: https://controllerstech.com/spi-using-registers-in-stm32/.
    */
-  while (!(SPI_SR(SPI1) & (SPI_SR_TXE))) /* Wait for TXE(Transmit buffer empty) flag to set. */
+  while (!(SPI_SR(SPI1) & SPI_SR_TXE)) /* Wait for TXE(Transmit buffer empty) flag to set. */
   {
   }
-  while ((SPI_SR(SPI1) & (SPI_SR_BSY))) /* Wait for BSY(Busy) flag to reset. */
+  while ((SPI_SR(SPI1) & SPI_SR_BSY)) /* Wait for BSY(Busy) flag to reset. */
   {
   }
 
@@ -203,8 +205,16 @@ void exti9_5_isr(void)
   exti_reset_request(EXTI_SPI_RQ);
 
   spi_select();
+  while ((SPI_SR(SPI1) & SPI_SR_BSY)) /* Wait for BSY(Busy) flag to reset. */
+  {
+  }
+
   spi_send(SPI1, 0x00); /* Just for beget clock signal. */
   uint8_t indata = spi_read(SPI1);
+
+  while ((SPI_SR(SPI1) & SPI_SR_BSY)) /* Wait for BSY(Busy) flag to reset. */
+  {
+  }
   spi_deselect();
 
   usart_send_blocking(USART2, indata);
