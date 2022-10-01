@@ -29,7 +29,7 @@ extern "C"
   #define GPIO_SPI_MOSI_PIN (GPIO7) /* D11. */
   #define GPIO_SPI_CS_PORT (GPIOB)
   #define GPIO_SPI_CS_PIN (GPIO6) /* D10. */
-  #define EXTI_SPI_CS (EXTI5)
+  #define EXTI_SPI_CS (EXTI6)
   #define NVIC_SPI_CS_IRQ (NVIC_EXTI9_5_IRQ)
 
   #define GPIO_SPI_RQ_PORT (GPIOC)
@@ -46,7 +46,7 @@ extern "C"
   #define GPIO_SPI_MOSI_PIN (GPIO7) /* D11. */
   #define GPIO_SPI_CS_PORT (GPIOB)
   #define GPIO_SPI_CS_PIN (GPIO6) /* D10. */
-  #define EXTI_SPI_CS (EXTI5)
+  #define EXTI_SPI_CS (EXTI6)
   #define NVIC_SPI_CS_IRQ (NVIC_EXTI9_5_IRQ)
   #define GPIO_SPI_AF (GPIO_AF5) /* Ref: Table-11 in DS10693. */
 
