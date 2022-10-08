@@ -21,7 +21,7 @@
 /**
  * @brief f_counter (CK_CNT).
  */
-#define COUNTER_CLOCK (1000000)
+#define COUNTER_CLOCK (1e5)
 
 /**
  * @brief PSC (Prescaler), the value of TIMx_PSC register.
@@ -81,10 +81,6 @@ static void led_setup(void)
 
 static void timer_setup(void)
 {
-  /* Setup interrupt. */
-  nvic_enable_irq(NVIC_TIM2_IRQ);
-  timer_enable_irq(TIM2, TIM_DIER_CC1IE);
-
   timer_set_mode(TIM2,
                  TIM_CR1_CKD_CK_INT,
                  TIM_CR1_CMS_EDGE,
@@ -94,6 +90,10 @@ static void timer_setup(void)
 
   timer_set_prescaler(TIM2, TIMER_PRESCALER); /* Setup TIMx_PSC register. */
   timer_set_period(TIM2, TIMER_PERIOD);       /* Setup TIMx_ARR register. */
+
+  /* Setup interrupt. */
+  timer_enable_irq(TIM2, TIM_DIER_UIE); /* Select 'UI (Update interrupt)'. */
+  nvic_enable_irq(NVIC_TIM2_IRQ);
 
   timer_enable_counter(TIM2);
 }
@@ -118,14 +118,10 @@ int main(void)
  */
 void tim2_isr(void)
 {
-  /*
-   * SR: Status register.
-   * CC1IF: Capture/Compare 1 interrupt flag.
-   */
-
-  if (timer_get_flag(TIM2, TIM_SR_CC1IF))
+  /* Check 'Update interrupt flag'. */
+  if (timer_get_flag(TIM2, TIM_SR_UIF))
   {
-    timer_clear_flag(TIM2, TIM_SR_CC1IF);
+    timer_clear_flag(TIM2, TIM_SR_UIF);
 
     gpio_toggle(GPIO_LED_PORT, GPIO_LED_PIN); /* LED on/off. */
   }
