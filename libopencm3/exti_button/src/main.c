@@ -77,11 +77,11 @@ static void button_setup(void)
   gpio_mode_setup(GPIO_BUTTON_PORT, GPIO_MODE_INPUT, GPIO_PUPD_NONE, GPIO_BUTTON_PIN);
 #endif
 
-  /* Set up interrupt. */
-  nvic_enable_irq(NVIC_BUTTON_IRQ);
+  /* Setup interrupt. */
   exti_select_source(EXTI_BUTTON_SOURCE, GPIO_BUTTON_PORT);
   exti_set_trigger(EXTI_BUTTON_SOURCE, EXTI_TRIGGER_FALLING);
   exti_enable_request(EXTI_BUTTON_SOURCE);
+  nvic_enable_irq(NVIC_BUTTON_IRQ);
 }
 
 static void rcc_setup(void)
