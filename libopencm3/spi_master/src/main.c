@@ -209,11 +209,11 @@ void exti9_5_isr(void)
 
   spi_select();
   spi_send(SPI1, 0x00);               /* Just for beget clock signal. */
-  while ((SPI_SR(SPI1) & SPI_SR_BSY)) /* Wait for 'Busy' flag to reset. */
-  {
-  }
-  uint8_t indata = spi_read(SPI1);
+  // while ((SPI_SR(SPI1) & SPI_SR_BSY)) /* Wait for 'Busy' flag to reset. */
+  // {
+  // }
 
+  uint8_t indata = spi_read(SPI1);
   while ((SPI_SR(SPI1) & SPI_SR_BSY)) /* Wait for 'Busy' flag to reset. */
   {
   }
