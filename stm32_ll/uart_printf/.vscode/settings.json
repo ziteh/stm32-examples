@@ -9,10 +9,4 @@
         "STM32G431xx",
         "__GNUC__"
     ],
-    "files.associations": {
-        "user_main.h": "c",
-        "stm32g4xx_ll_usart.h": "c",
-        "stm32g4xx.h": "c",
-        "stm32g431xx.h": "c"
-    }
 }
