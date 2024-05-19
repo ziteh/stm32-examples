@@ -6,6 +6,8 @@ This repo contains some basic examples for STM32.
 
 [LibOpenCM3](https://github.com/libopencm3/libopencm3) is an open source ARM Cortex-M microcontroller library.
 
+My blog posts: [簡單入門 LibOpenCM3 STM32 嵌入式系統開發](https://ziteh.github.io/series/%E7%B0%A1%E5%96%AE%E5%85%A5%E9%96%80-libopencm3-stm32-%E5%B5%8C%E5%85%A5%E5%BC%8F%E7%B3%BB%E7%B5%B1%E9%96%8B%E7%99%BC/)
+
 | Examples                                                                    | F103RB | F446RE | F401RE | F302R8 | L432KC | G431KB |
 | :-------------------------------------------------------------------------- | :----: | :----: | :----: | :----: | :----: | :----: |
 | [Blinking LED](./libopencm3/blink/)                                         |   ✔️   |   ✔️   |   ✔️   |   ✔️   |   ✔️   |   ✔️   |
