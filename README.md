@@ -83,3 +83,7 @@ git submodule update --init --recursive
   - Nucleo-64 MB1136: [UM1724](https://www.st.com/resource/en/user_manual/um1724-stm32-nucleo64-boards-mb1136-stmicroelectronics.pdf)
   - Nucleo-32 MB1180: [UM1956](https://www.st.com/resource/en/user_manual/um1956-stm32-nucleo32-boards-mb1180-stmicroelectronics.pdf)
   - Nucleo-32 MB1430: [UM2397](https://www.st.com/resource/en/user_manual/um2397-stm32g4-nucleo32-board-mb1430-stmicroelectronics.pdf)
+
+## License
+
+My code is licensed under the [MIT License](./LICENSE). Other code is licensed under their own licenses (e.g., CMSIS under Apache 2.0, STM32 HAL/LL under BSD-3-Clause), which can be identified at each level of the folder or at the beginning of each file.
