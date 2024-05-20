@@ -1,3 +1,6 @@
 [submodule "libopencm3/i2c/lib/PCF8574T_LCD_Driver"]
 	path = libopencm3/i2c_lcd1602/lib/PCF8574T_LCD_Driver
 	url = https://github.com/toripoyo/PCF8574T_LCD_Driver.git
+[submodule "stm32_ll/uart_printf_tiny/Printf"]
+	path = stm32_ll/uart_printf_tiny/Printf
+	url = https://github.com/eyalroz/printf.git
