@@ -19,7 +19,8 @@
 #define TX_BUF_SIZE (256U)
 
 /**
- * @brief Linux kfifo v2.6
+ * @brief Linux kernel kfifo v2.6.24
+ * @note https://github.com/torvalds/linux/blob/49914084e797530d9baaf51df9eda77babc98fa8/kernel/kfifo.c
  */
 typedef struct
 {
