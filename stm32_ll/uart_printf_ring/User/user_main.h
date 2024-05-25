@@ -1,23 +1,21 @@
-/**
- * @file user_main.h
- * @author ZiTe (honmonoh@gmail.com)
- * @copyright MIT
- */
+/// @file user_main.c
+/// @author ZiTe <honmonoh@gmail.com>
+/// @copyright SPDX-License-Identifier: MIT
 
-#ifndef USER_MAIN_H_
-#define USER_MAIN_H_
+#ifndef USER_MAIN_H
+#define USER_MAIN_H
 
 #include "stm32g4xx.h"
 #include "stm32g4xx_ll_usart.h"
-#include "stm32g4xx_ll_utils.h" // For LL_mDelay().
+#include "stm32g4xx_ll_utils.h" // For LL_mDelay()
 
-// Define instances and parameters.
+// Define instances and parameters
 
-#define MY_UART (USART2)
+#define MY_UART          (USART2)
 #define MY_UART_BAUDRATE (115200U)
 
-void User_Init(void);
-void User_Loop(void);
-void User_UART_ISR(void);
+void user_init(void);
+void user_loop(void);
+void user_uart_isr(void);
 
-#endif /* USER_MAIN_H_ */
+#endif

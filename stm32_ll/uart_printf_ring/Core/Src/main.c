@@ -92,14 +92,14 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-  User_Init();
+  user_init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	User_Loop();
+	user_loop();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

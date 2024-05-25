@@ -1,7 +1,6 @@
 {
-    "editor.tabSize": 2,
+    "editor.tabSize": 4,
     "editor.insertSpaces": true,
-    "C_Cpp.clang_format_fallbackStyle": "{Language: Cpp, BasedOnStyle: LLVM, TabWidth: 2, IndentWidth: 2, AccessModifierOffset: -2, UseTab: Never, AlignAfterOpenBracket: Align, AllowShortBlocksOnASingleLine: Always, AllowShortFunctionsOnASingleLine: All, AllowShortIfStatementsOnASingleLine: AllIfsAndElse, AllowShortLoopsOnASingleLine: true, BinPackArguments: false, BinPackParameters: false, BreakBeforeBraces: Allman, ColumnLimit: 0, FixNamespaceComments: false, IndentPPDirectives: BeforeHash, IndentWrappedFunctionNames: true, KeepEmptyLinesAtTheStartOfBlocks: false, MaxEmptyLinesToKeep: 1, NamespaceIndentation: All, SortIncludes: false}",
     "C_Cpp.default.defines": [
         "DEBUG",
         // "USE_HAL_DRIVER",
@@ -9,4 +8,9 @@
         "STM32G431xx",
         "__GNUC__"
     ],
+    "C_Cpp.clang_format_fallbackStyle": "{BasedOnStyle: LLVM, Language: Cpp, TabWidth: 4, IndentWidth: 4, AccessModifierOffset: -4, ColumnLimit: 0, UseTab: Never, SortIncludes: Never, AlignAfterOpenBracket: BlockIndent, AlignArrayOfStructures: Left, AlignConsecutiveMacros: {Enabled: true, AcrossComments: true}, AlignEscapedNewlines: Left, AlignOperands: AlignAfterOperator, AllowShortBlocksOnASingleLine: Always, AllowShortFunctionsOnASingleLine: None, AllowShortIfStatementsOnASingleLine: AllIfsAndElse, AllowShortLoopsOnASingleLine: true, BinPackArguments: false, BinPackParameters: false, BitFieldColonSpacing: After, BreakBeforeBraces: Custom, BraceWrapping: {AfterCaseLabel: false, AfterClass: false, AfterControlStatement: Never, AfterEnum: false, AfterFunction: false, AfterNamespace: false, AfterObjCDeclaration: false, AfterStruct: false, AfterUnion: false, AfterExternBlock: true, BeforeCatch: false, BeforeElse: false, BeforeLambdaBody: false, BeforeWhile: false, IndentBraces: false, SplitEmptyFunction: true, SplitEmptyRecord: true, SplitEmptyNamespace: true}, BreakBeforeBinaryOperators: NonAssignment, CommentPragmas: '', IncludeIsMainRegex: '', IndentExternBlock: NoIndent, IndentPPDirectives: BeforeHash, InsertNewlineAtEOF: true, InsertTrailingCommas: Wrapped, KeepEmptyLinesAtTheStartOfBlocks: false, LineEnding: DeriveLF}",
+    "files.associations": {
+        "user_main.h": "c",
+        "ring_buf.h": "c"
+    },
 }
