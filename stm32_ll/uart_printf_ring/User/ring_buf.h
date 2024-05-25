@@ -21,14 +21,14 @@ typedef struct {
 /// @param ring Pointer to the ring buffer.
 /// @param data Pointer to the data to put.
 /// @param len Length of the data.
-/// @return The number actually put into the buffer.
+/// @return The number of bytes actually put into the buffer.
 uint16_t ring_put(ring_buf_t *ring, const uint8_t *data, uint16_t len);
 
 /// @brief Gets data from the ring buffer.
 /// @param ring Pointer to the ring buffer.
 /// @param data Pointer to the buffer to store the data.
 /// @param len Max length of the data to get.
-/// @return The number actually read from the buffer.
+/// @return The number of bytes actually read from the buffer.
 uint16_t ring_get(ring_buf_t *ring, uint8_t *data, uint16_t len);
 
 /// @brief Gets one byte from the ring buffer.
