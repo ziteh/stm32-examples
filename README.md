@@ -10,33 +10,38 @@ My blog posts: [簡單入門 LibOpenCM3 STM32 嵌入式系統開發](https://zit
 
 | Examples                                                                    | F103RB | F446RE | F401RE | F302R8 | L432KC | G431KB |
 | :-------------------------------------------------------------------------- | :----: | :----: | :----: | :----: | :----: | :----: |
-| [Blinking LED](./libopencm3/blink/)                                         |   ✔️   |   ✔️   |   ✔️   |   ✔️   |   ✔️   |   ✔️   |
-| [GPIO input](./libopencm3/gpio_input/)                                      |   ✔️   |   ✔️   |   ✔️   |   ✔️   |   ✔️   |        |
-| [EXTI button](./libopencm3/exti_button/)                                    |   ✔️   |   ✔️   |   ✔️   |   ✔️   |   ✔️   |        |
-| [USART with printf()](./libopencm3/usart_printf/)                           |   ✔️   |   ✔️   |        |   ✔️   |   ✔️   |        |
-| [USART receive interrupt](./libopencm3/usart_receive_interrupt/)            |   ✔️   |   ✔️   |        |        |        |        |
-| [Timer](./libopencm3/timer/)                                                |   ✔️   |   ✔️   |        |        |        |        |
-| [SysTick delay](./libopencm3/systick/)                                      |   ✔️   |   ✔️   |        |        |        |        |
-| [PWM](./libopencm3/pwm/)                                                    |   ✔️   |   ✔️   |        |        |        |        |
-| [IWDG](./libopencm3/iwdg/)                                                  |   ✔️   |   ✔️   |        |        |        |        |
-| [WWDG](./libopencm3/wwdg/)                                                  |   ✔️   |   ✔️   |        |        |        |        |
-| [ADC (Regular single channel)](./libopencm3/adc_single_channel_regular/)    |   ✔️   |   ✔️   |        |        |        |        |
-| [ADC (Injected multi channel)](./libopencm3/adc_multi_channel_injected/)    |   ❌   |   ✔️   |        |        |        |        |
-| [ADC (Interrupt)](./libopencm3/adc_interrupt/)                              |   ✔️   |   ✔️   |        |        |        |        |
-| [ADC (External trigger by timer)](./libopencm3/adc_external_trigger_timer/) |   ✔️   |   ✔️   |        |        |        |        |
-| [SPI (Master mode)](./libopencm3/spi_master/)                               |   ✔️   |   ✔️   |        |        |        |        |
-| [SPI (Slave mode)](./libopencm3/spi_slave/)                                 |   ✔️   |   ✔️   |        |        |        |        |
-| [I2C (LCD 1602)](./libopencm3/i2c_lcd1602/)                                 |   ✔️   |   ✔️   |        |        |        |        |
-| [I2C (EEPROM 24C256)](./libopencm3/i2c_eeprom_24c256/)                      |   ✔️   |   ✔️   |        |        |        |        |
-| [CRC](./libopencm3/crc/)                                                    |   ✔️   |   ✔️   |        |        |        |        |
+| [Blinking LED](./libopencm3/blink/)                                         |   ✔️    |   ✔️    |   ✔️    |   ✔️    |   ✔️    |   ✔️    |
+| [GPIO input](./libopencm3/gpio_input/)                                      |   ✔️    |   ✔️    |   ✔️    |   ✔️    |   ✔️    |        |
+| [EXTI button](./libopencm3/exti_button/)                                    |   ✔️    |   ✔️    |   ✔️    |   ✔️    |   ✔️    |        |
+| [USART with printf()](./libopencm3/usart_printf/)                           |   ✔️    |   ✔️    |        |   ✔️    |   ✔️    |        |
+| [USART receive interrupt](./libopencm3/usart_receive_interrupt/)            |   ✔️    |   ✔️    |        |        |        |        |
+| [Timer](./libopencm3/timer/)                                                |   ✔️    |   ✔️    |        |        |        |        |
+| [SysTick delay](./libopencm3/systick/)                                      |   ✔️    |   ✔️    |        |        |        |        |
+| [PWM](./libopencm3/pwm/)                                                    |   ✔️    |   ✔️    |        |        |        |        |
+| [IWDG](./libopencm3/iwdg/)                                                  |   ✔️    |   ✔️    |        |        |        |        |
+| [WWDG](./libopencm3/wwdg/)                                                  |   ✔️    |   ✔️    |        |        |        |        |
+| [ADC (Regular single channel)](./libopencm3/adc_single_channel_regular/)    |   ✔️    |   ✔️    |        |        |        |        |
+| [ADC (Injected multi channel)](./libopencm3/adc_multi_channel_injected/)    |   ❌    |   ✔️    |        |        |        |        |
+| [ADC (Interrupt)](./libopencm3/adc_interrupt/)                              |   ✔️    |   ✔️    |        |        |        |        |
+| [ADC (External trigger by timer)](./libopencm3/adc_external_trigger_timer/) |   ✔️    |   ✔️    |        |        |        |        |
+| [SPI (Master mode)](./libopencm3/spi_master/)                               |   ✔️    |   ✔️    |        |        |        |        |
+| [SPI (Slave mode)](./libopencm3/spi_slave/)                                 |   ✔️    |   ✔️    |        |        |        |        |
+| [I2C (LCD 1602)](./libopencm3/i2c_lcd1602/)                                 |   ✔️    |   ✔️    |        |        |        |        |
+| [I2C (EEPROM 24C256)](./libopencm3/i2c_eeprom_24c256/)                      |   ✔️    |   ✔️    |        |        |        |        |
+| [CRC](./libopencm3/crc/)                                                    |   ✔️    |   ✔️    |        |        |        |        |
 
 ## STM32 LL
 
 STM32 Low Layer.
 
-| Examples                                        | G431KB |
-| :---------------------------------------------- | :----: |
-| [ADC (Injected TRGO)](./stm32_ll/adc_inj_trgo/) |   ✔️   |
+| Examples                                                        | G431KB |
+| :-------------------------------------------------------------- | :----: |
+| [ADC (Injected TRGO)](./stm32_ll/adc_inj_trgo/)                 |   ✔️    |
+| [UART Printf](./stm32_ll/uart_printf/)                          |   ✔️    |
+| [UART Printf (Ring buffer/kfifo)](./stm32_ll/uart_printf_ring/) |   ✔️    |
+| [UART Printf (tiny)](./stm32_ll/uart_printf_tiny/)              |   ✔️    |
+
+> Check the code under the `User` folder in each project.
 
 ## STM32 HAL
 
@@ -44,7 +49,7 @@ STM32 Hardware Abstraction Layer.
 
 | Examples                           | F103RB | F446RE | G431KB |
 | :--------------------------------- | :----: | :----: | :----: |
-| [Blinking LED](./stm32_hal/blink/) |        |        |   ✔️   |
+| [Blinking LED](./stm32_hal/blink/) |        |        |   ✔️    |
 
 ## Usage
 
